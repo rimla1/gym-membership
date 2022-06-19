@@ -1,8 +1,10 @@
 import { Request, Response } from "express"
+import { UserRepository } from "./user.repository"
 import { UserService } from "./user.service"
 import { CreateUserInput } from "./user.types"
 
-const userService = new UserService()
+const userRepo = new UserRepository()
+const userService = new UserService(userRepo)
 
 export const createUser = async (req: Request, res: Response) => {
 
