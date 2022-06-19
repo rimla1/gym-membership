@@ -1,19 +1,25 @@
+import { userModel } from "./user.model"
 import { CreateUserInput, User } from "./user.types"
 
 interface IUserService {
-    createUser(userInput: CreateUserInput): User
-    // getUsers(): User[]
+    createUser(userInput: CreateUserInput): Promise<User>
+    // getUsers(): Promise<User[]>
 }
 
 export class UserService implements IUserService {
-     createUser(userInput: CreateUserInput): User {
+     async createUser(userInput: CreateUserInput): Promise<User> {
+
+        const userToSave = new userModel(userInput)
+        const savedUser = await userToSave.save()
+
         const user:User = {
-            name: userInput.name,
-            age: userInput.age,
-            email: userInput.email,
-            password: userInput.password,
-            id: "sajdlsjadkljsa"
+            name: savedUser.name,
+            age: savedUser.age,
+            email: savedUser.email,
+            password: savedUser.password,
+            id: savedUser._id.toString()
         }
+
         return user
     }
 }
