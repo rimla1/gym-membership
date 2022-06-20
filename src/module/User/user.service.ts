@@ -4,7 +4,7 @@ import { CreateUserInput, User } from "./user.types"
 
 interface IUserService {
     createUser(userInput: CreateUserInput): Promise<User>
-    // getUsers(): Promise<User[]>
+    getUsers(): Promise<User[]>
 }
 
 export class UserService implements IUserService {
@@ -18,5 +18,10 @@ export class UserService implements IUserService {
 
         const user = await this.userRepo.createUser(userInput)
         return user
+    }
+
+    async getUsers(): Promise<User[]> {
+        const users = await this.userRepo.getUsers()
+        return users
     }
 }

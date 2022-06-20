@@ -6,6 +6,11 @@ import { CreateUserInput } from "./user.types"
 const userRepo = new UserRepository()
 const userService = new UserService(userRepo)
 
+export const getUsers = async (req: Request, res: Response) => {
+    const listOfAllUsers = await userService.getUsers()
+    return res.json(listOfAllUsers)
+}
+
 export const createUser = async (req: Request, res: Response) => {
 
       // TODO - 1. Accept Request and pass it to service

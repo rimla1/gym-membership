@@ -16,4 +16,15 @@ export class UserRepository {
 
         return user
     }
+
+    async getUsers(): Promise<User[]> {
+        const users = await userModel.find();
+
+        const mappedUsers:User[] = []
+        users.forEach(user => {
+            mappedUsers.push({name: user.name, age: user.age, email: user.email, password: user.password, id: user._id.toString()})
+        })
+        return mappedUsers
+
+    }
 }
