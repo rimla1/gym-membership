@@ -51,5 +51,8 @@ export const editUser = async(req: Request, res: Response) => {
 export const deleteUser = async(req: Request, res: Response) => {
     const userId = req.params.userId
     const isUserDeleted = await userService.deleteUser(userId)
+    if (!isUserDeleted) {
+        return res.json({message: "User does not exist!"})
+    }
     return res.json(isUserDeleted)
 }

@@ -22,7 +22,8 @@ export class UserService implements IUserService {
     }
 
     async deleteUser(userId: string): Promise<boolean> {
-        return false
+        const isUserDeleted = await this.userRepo.deleteUser(userId)
+        return isUserDeleted
     }
 
     async getUsers(): Promise<User[]> {

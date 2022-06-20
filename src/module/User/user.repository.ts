@@ -68,4 +68,12 @@ export class UserRepository {
         return user
     }
 
+    async deleteUser(userId: string): Promise<boolean> {
+        const userToDelete = await userModel.findByIdAndDelete(userId)
+        if(!userToDelete){
+            return false
+        }
+        return true
+    }
+
 }
