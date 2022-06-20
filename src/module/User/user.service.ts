@@ -1,27 +1,49 @@
-import { userModel } from "./user.model"
 import { UserRepository } from "./user.repository"
-import { CreateUserInput, User } from "./user.types"
+import { CreateUserInput, EditUserInput, User } from "./user.types"
 
 interface IUserService {
-    createUser(userInput: CreateUserInput): Promise<User>
+    createUser(createUserInput: CreateUserInput): Promise<User>
     getUsers(): Promise<User[]>
+    editUser(userId: string, editUserInput: EditUserInput): Promise<User | null>
+    deleteUser(userId: string): Promise<boolean>
+    getUserByEmail(email: string): Promise<User | null>
 }
 
 export class UserService implements IUserService {
-    userRepo: UserRepository
+    private userRepo: UserRepository
 
     constructor(userRepo: UserRepository){
         this.userRepo = userRepo
     }
 
-     async createUser(userInput: CreateUserInput): Promise<User> {
-
-        const user = await this.userRepo.createUser(userInput)
+     async getUserByEmail(email: string): Promise<User | null> {
+        const user = await this.userRepo.getUserByEmail(email)
         return user
+    }
+
+    async deleteUser(userId: string): Promise<boolean> {
+        return false
     }
 
     async getUsers(): Promise<User[]> {
         const users = await this.userRepo.getUsers()
         return users
+    }
+
+     async createUser(createUserInput: CreateUserInput): Promise<User> {
+
+        const user = await this.userRepo.createUser(createUserInput)
+        return user
+    }
+
+    async editUser(userId: string, editUserInput: EditUserInput): Promise<User | null> {
+
+        // return editedUser
+        
+        // TODO 1 ova funkcija primi argumente iz kontrolera koje treba da prosledi dalje repo
+        const editedUser = await this.userRepo.editUser(userId, editUserInput)
+
+        // TODO 2 Nakon sto servis zavrsi, repoistory prima nazad editovanog usera ili null i salje ga controleru
+        return editedUser
     }
 }

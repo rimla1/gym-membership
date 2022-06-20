@@ -1,8 +1,9 @@
-export type CreateUserInput = {
+export type EditUserInput = {
     name: string
-    email: string
     password: string
     age: number
 }
+
+export type CreateUserInput = EditUserInput & {email: string}
 
 export type User = CreateUserInput & {id: string}
