@@ -1,11 +1,11 @@
 import { User } from "../User/user.types"
 
-export type loginRequest = {
+export type LoginRequest = {
     email: string
     password: string
 }
 
-export type loginResponse = {
+export type LoginResponse = {
     user: User
     token: string
 }
