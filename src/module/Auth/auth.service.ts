@@ -5,7 +5,7 @@ interface IAuthService{
     
 }
 
-class AuthService implements IAuthService{
+export class AuthService implements IAuthService{
     async login(loginInput: LoginRequest): Promise<LoginResponse | ErrorNotFound>{
         return {
             message: "User not found"

@@ -1,5 +1,8 @@
 import {Request, Response} from "express";
+import { AuthService } from "./auth.service";
 import { LoginRequest } from "./auth.types";
+
+const authService = new AuthService
 
 export const loginUser = (req: Request, res: Response) => {
     const {email, password} = req.body
@@ -9,5 +12,7 @@ export const loginUser = (req: Request, res: Response) => {
         password
     }
 
-    return res.json(loginInput)
+    const loginResult = authService.login(loginInput)
+
+    return res.json(loginResult)
 }
