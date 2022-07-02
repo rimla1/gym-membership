@@ -6,6 +6,7 @@ import { CreateUserInput, EditUserInput } from "./user.types"
 const userRepo = new UserRepository()
 const userService = new UserService(userRepo)
 
+
 export const getUsers = async (req: Request, res: Response) => {
     const listOfAllUsers = await userService.getUsers()
     return res.json(listOfAllUsers)
