@@ -9,3 +9,5 @@ export type LoginResponse = {
     user: User
     token: string
 }
+
+export type SignupRequest = LoginRequest & {confirmPassword: string}

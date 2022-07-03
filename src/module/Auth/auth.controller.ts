@@ -20,3 +20,4 @@ export const loginUser = (req: Request, res: Response) => {
 
     return res.json(loginResult)
 }
+
