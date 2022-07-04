@@ -1,4 +1,4 @@
-import { ErrorNotFound } from "../../shared/types";
+import { CustomError, ErrorNotFound } from "../../shared/types";
 import { UserService } from "../User/user.service";
 import { LoginRequest, LoginResponse } from "./auth.types";
 
@@ -17,7 +17,7 @@ export class AuthService implements IAuthService{
     async login(loginInput: LoginRequest): Promise<LoginResponse | ErrorNotFound>{
         const user = await this.userService.getUserByEmail(loginInput.email)
         const errorNotFound: ErrorNotFound = {
-            message: "User does not exist with that email"
+            message: "User already exist with that email"
         }
 
         if(!user){

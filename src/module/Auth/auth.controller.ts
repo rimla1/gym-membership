@@ -2,7 +2,7 @@ import {Request, Response} from "express";
 import { UserRepository } from "../User/user.repository";
 import { UserService } from "../User/user.service";
 import { AuthService } from "./auth.service";
-import { LoginRequest, SignupRequest } from "./auth.types";
+import { LoginRequest } from "./auth.types";
 
 const userRepostiory = new UserRepository()
 const userService = new UserService(userRepostiory)
@@ -21,16 +21,3 @@ export const loginUser = (req: Request, res: Response) => {
     return res.json(loginResult)
 }
 
-export const signupUser = (req: Request, res: Response) => {
-    const {email, password, confirmPassword} = req.body
-
-    const signupInput: SignupRequest = {
-        email,
-        password,
-        confirmPassword
-    }
-
-    const signupResult = authService
-
-    return res.json(signupResult)
-}

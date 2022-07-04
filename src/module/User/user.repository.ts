@@ -11,6 +11,7 @@ export class UserRepository {
             age: savedUser.age,
             email: savedUser.email,
             password: savedUser.password,
+            gender: savedUser.gender,
             id: savedUser._id.toString()
         }
 
@@ -22,7 +23,7 @@ export class UserRepository {
 
         const mappedUsers:User[] = []
         users.forEach(user => {
-            mappedUsers.push({name: user.name, age: user.age, email: user.email, password: user.password, id: user._id.toString()})
+            mappedUsers.push({name: user.name, age: user.age, email: user.email, gender: user.gender , password: user.password, id: user._id.toString()})
         })
         return mappedUsers
     }
@@ -39,6 +40,7 @@ export class UserRepository {
             age: userByEmail.age,
             email: userByEmail.email,
             password: userByEmail.password,
+            gender: userByEmail.gender,
             id: userByEmail._id.toString()
         }
 
@@ -62,6 +64,7 @@ export class UserRepository {
             age: editedUser.age,
             email: editedUser.email,
             password: editedUser.password,
+            gender: editedUser.gender,
             id: editedUser._id.toString()
         }
 

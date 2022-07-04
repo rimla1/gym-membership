@@ -16,13 +16,14 @@ export const createUser = async (req: Request, res: Response) => {
 
       // TODO - 1. Accept Request and pass it to service
 
-    const {name, age, password, email} = req.body
+    const {name, age, password, email, gender} = req.body
 
     const createUserInput: CreateUserInput = {
         name,
         age,
         password,
-        email
+        email,
+        gender
     }
 
     const createdUser = await userService.createUser(createUserInput)
@@ -33,12 +34,13 @@ export const createUser = async (req: Request, res: Response) => {
 }
 
 export const editUser = async(req: Request, res: Response) => {
-    const {name, age, password, email} = req.body
+    const {name, age, password, email, gender} = req.body
 
     const editUserInput: EditUserInput = {
         name,
         age,
         password,
+        gender
     }
 
     const userId = req.params.userId
