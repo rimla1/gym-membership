@@ -30,7 +30,6 @@ export class UserRepository {
 
     async getUserByEmail(email: string): Promise<User | null> {
         const userByEmail = await userModel.findOne({email: email})
-
         if(!userByEmail) {
             return null
         }
@@ -43,6 +42,8 @@ export class UserRepository {
             gender: userByEmail.gender,
             id: userByEmail._id.toString()
         }
+
+        console.log("This is from user.repository.ts", user) 
 
         return user
     }

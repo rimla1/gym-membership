@@ -8,7 +8,7 @@ const userRepostiory = new UserRepository()
 const userService = new UserService(userRepostiory)
 const authService = new AuthService(userService)
 
-export const loginUser = (req: Request, res: Response) => {
+export const loginUser = async (req: Request, res: Response) => {
     const {email, password} = req.body
 
     const loginInput: LoginRequest = {
@@ -16,7 +16,8 @@ export const loginUser = (req: Request, res: Response) => {
         password
     }
 
-    const loginResult = authService.login(loginInput)
+    const loginResult = await authService.login(loginInput)
+    console.log("this is from auth.controller.ts",loginResult)
 
     return res.json(loginResult)
 }

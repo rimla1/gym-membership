@@ -16,6 +16,7 @@ export class AuthService implements IAuthService{
 
     async login(loginInput: LoginRequest): Promise<LoginResponse | ErrorNotFound>{
         const user = await this.userService.getUserByEmail(loginInput.email)
+        console.log("This is from auth.service.ts", user)
         const errorNotFound: ErrorNotFound = {
             message: "User already exist with that email"
         }

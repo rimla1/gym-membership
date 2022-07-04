@@ -18,8 +18,11 @@ export class UserService implements IUserService {
 
      async getUserByEmail(email: string): Promise<User | null> {
         const user = await this.userRepo.getUserByEmail(email)
+        console.log("This is from user.service.ts", user)
         return user
     }
+
+    
 
     async deleteUser(userId: string): Promise<boolean> {
         const isUserDeleted = await this.userRepo.deleteUser(userId)

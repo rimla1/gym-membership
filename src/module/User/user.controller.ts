@@ -26,15 +26,16 @@ export const createUser = async (req: Request, res: Response) => {
         gender
     }
 
-    const createdUser = await userService.createUser(createUserInput)
+    const user = await userService.createUser(createUserInput)
 
+    console.log("This is from user.controller.ts", user)
 
     // TODO - 2. Return response
-    return res.json(createdUser)
+    return res.json(user)
 }
 
 export const editUser = async(req: Request, res: Response) => {
-    const {name, age, password, email, gender} = req.body
+    const {name, age, password,  gender} = req.body
 
     const editUserInput: EditUserInput = {
         name,

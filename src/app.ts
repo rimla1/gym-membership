@@ -4,6 +4,7 @@ config()
 import express from 'express';
 import mongoose from 'mongoose';
 import { userRouter } from './module/User/user.routes';
+import { authRouter } from './module/Auth/auth.routes'
 
 const PORT = 3000;
 
@@ -14,6 +15,7 @@ const app = express();
 app.use(express.json())
 
 app.use("/api/v1/users", userRouter)
+app.use("/api/v1/logins", authRouter)
 
 mongoose.connect(MONGODB_URI).then(() => {
     console.log("Connected to the db")
