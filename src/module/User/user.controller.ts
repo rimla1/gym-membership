@@ -28,7 +28,7 @@ export const createUser = async (req: Request, res: Response) => {
 
     const user = await userService.createUser(createUserInput)
 
-    console.log("This is from user.controller.ts", user)
+
 
     // TODO - 2. Return response
     return res.json(user)

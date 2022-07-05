@@ -3,6 +3,9 @@ import { CreateUserInput, EditUserInput, User } from "./user.types"
 
 export class UserRepository {
     async createUser(createUserInput: CreateUserInput): Promise<User> {
+        // const checkUser = await this.getUserByEmail(createUserInput.email)
+        // if(checkUser){}
+        const doesUserExist = await userModel.findOne({email: createUserInput.email}) 
         const userToSave = new userModel(createUserInput)
         const savedUser = await userToSave.save()
 

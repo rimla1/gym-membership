@@ -2,7 +2,7 @@ import { UserRepository } from "./user.repository"
 import { CreateUserInput, EditUserInput, User } from "./user.types"
 
 interface IUserService {
-    createUser(createUserInput: CreateUserInput): Promise<User>
+    createUser(createUserInput: CreateUserInput): Promise<User | null>
     getUsers(): Promise<User[]>
     editUser(userId: string, editUserInput: EditUserInput): Promise<User | null>
     deleteUser(userId: string): Promise<boolean>
@@ -34,7 +34,7 @@ export class UserService implements IUserService {
         return users
     }
 
-     async createUser(createUserInput: CreateUserInput): Promise<User> {
+     async createUser(createUserInput: CreateUserInput): Promise<User | null> {
 
         const user = await this.userRepo.createUser(createUserInput)
         return user
