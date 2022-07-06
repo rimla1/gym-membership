@@ -1,0 +1,37 @@
+Authentication Routes
+
+http://localhost:3000/api/v1/logins/login [POST] - Completed (60/100)
+body.raw.json(
+    {
+    "email": "",
+    "password": ""
+    }
+)
+
+
+User Routes
+
+http://localhost:3000/api/v1/users/ [GET] - Completed (60/100)
+
+http://localhost:3000/api/v1/users/ [POST] - Completed (60/100)
+body.raw.json(
+    {
+    "email": "",
+    "password": "",
+    "name": "",
+    "age": ,
+    "gender": ""
+}
+)
+
+http://localhost:3000/api/v1/users/:userId [PUT] - Completed (80/100)
+body.raw.json(
+    {
+    "password": "",
+    "name": "",
+    "age": ,
+    "gender": ""
+}
+)
+
+http://localhost:3000/api/v1/users/:userId [DELETE] - Completed (80/100)
