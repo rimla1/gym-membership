@@ -1,11 +1,15 @@
+import { ErrorNotFound } from "../../shared/types"
 import { userModel } from "./user.model"
 import { CreateUserInput, EditUserInput, User } from "./user.types"
 
 export class UserRepository {
-    async createUser(createUserInput: CreateUserInput): Promise<User> {
+    async createUser(createUserInput: CreateUserInput): Promise<User | null> {
         // const checkUser = await this.getUserByEmail(createUserInput.email)
         // if(checkUser){}
         const doesUserExist = await userModel.findOne({email: createUserInput.email}) 
+        if(doesUserExist){
+            return null
+        }
         const userToSave = new userModel(createUserInput)
         const savedUser = await userToSave.save()
 
@@ -18,6 +22,7 @@ export class UserRepository {
             id: savedUser._id.toString()
         }
 
+        console.log("This is from user.repository.ts", user)
         return user
     }
 

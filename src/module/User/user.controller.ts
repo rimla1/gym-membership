@@ -29,9 +29,13 @@ export const createUser = async (req: Request, res: Response) => {
     const user = await userService.createUser(createUserInput)
 
 
-
     // TODO - 2. Return response
-    return res.json(user)
+    console.log("This is from user.controller.ts", user)
+    if(user){
+        return res.json(user)
+    }
+    return res.json({message: "User with that e-mail already exist"})
+
 }
 
 export const editUser = async(req: Request, res: Response) => {

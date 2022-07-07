@@ -37,6 +37,7 @@ export class UserService implements IUserService {
      async createUser(createUserInput: CreateUserInput): Promise<User | null> {
 
         const user = await this.userRepo.createUser(createUserInput)
+        console.log("This is from user.service.ts", user)
         return user
     }
 
