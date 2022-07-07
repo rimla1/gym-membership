@@ -9,6 +9,10 @@ const userService = new UserService(userRepo)
 
 export const getUsers = async (req: Request, res: Response) => {
     const listOfAllUsers = await userService.getUsers()
+    if(listOfAllUsers.length === 0){
+        return res.json({message: "No users created yet!"})
+    }
+    console.log(listOfAllUsers.length)
     return res.json(listOfAllUsers)
 }
 
