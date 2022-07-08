@@ -1,6 +1,6 @@
 Authentication Routes
 
-http://localhost:3000/api/v1/logins/login [POST] - Completed (60/100) (User Input Exist for Validation)-[TO DO]
+http://localhost:3000/api/v1/logins/login [POST] - Completed (60/100) (User Input Exist for Validation)-[DONE]
 body.raw.json(
     {
     "email": "",
