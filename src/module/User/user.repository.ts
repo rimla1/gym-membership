@@ -81,11 +81,15 @@ export class UserRepository {
     }
 
     async deleteUser(userId: string): Promise<boolean> {
-        const userToDelete = await userModel.findByIdAndDelete(userId)
-        if(!userToDelete){
-            return false
+        try {
+            const userToDelete = await userModel.findByIdAndDelete(userId)
+        if(!userToDelete) {
+            throw new Error(`User with id: ${userId} does not exist`)
         }
         return true
+        } catch {
+            throw new Error("Something wrong with the database");
+        }
     }
 
 }
