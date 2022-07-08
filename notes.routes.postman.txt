@@ -24,7 +24,7 @@ body.raw.json(
 }
 )
 
-http://localhost:3000/api/v1/users/:userId [PUT] - Completed (80/100) - (User Input Exist for Validation) [TO DO]
+http://localhost:3000/api/v1/users/:userId [PUT] - Completed (80/100) - (User Input Exist for Validation) [DONE]
 body.raw.json(
     {
     "password": "",
