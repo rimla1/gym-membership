@@ -8,6 +8,8 @@ const userRepo = new UserRepository()
 const userService = new UserService(userRepo)
 
 
+
+
 export const getUsers = async (req: Request, res: Response) => {
     const listOfAllUsers = await userService.getUsers()
     if(listOfAllUsers.length === 0){

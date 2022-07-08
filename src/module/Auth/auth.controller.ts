@@ -3,6 +3,7 @@ import { UserRepository } from "../User/user.repository";
 import { UserService } from "../User/user.service";
 import { AuthService } from "./auth.service";
 import { LoginRequest } from "./auth.types";
+import { loginUserInputValidation } from "./auth.validation";
 
 const userRepostiory = new UserRepository()
 const userService = new UserService(userRepostiory)
@@ -14,6 +15,12 @@ export const loginUser = async (req: Request, res: Response) => {
     const loginInput: LoginRequest = {
         email,
         password
+    }
+
+    const loginUserValidated = loginUserInputValidation.validate(loginInput, {abortEarly: false})
+
+    if(loginUserValidated.error){
+            return res.status(401).json({errors: loginUserValidated.error?.details})
     }
 
     const loginResult = await authService.login(loginInput)
