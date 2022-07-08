@@ -1,6 +1,6 @@
 Authentication Routes
 
-http://localhost:3000/api/v1/logins/login [POST] - Completed (60/100)
+http://localhost:3000/api/v1/logins/login [POST] - Completed (60/100) (User Input Exist for Validation)-[TO DO]
 body.raw.json(
     {
     "email": "",
@@ -11,9 +11,9 @@ body.raw.json(
 
 User Routes
 
-http://localhost:3000/api/v1/users/ [GET] - Completed (60/100)
+http://localhost:3000/api/v1/users/ [GET] - Completed (60/100) (User Input Doesn't Exist for Validation)
 
-http://localhost:3000/api/v1/users/ [POST] - Completed (60/100)
+http://localhost:3000/api/v1/users/ [POST] - Completed (60/100) (User Input Exist for Validation)-[DONE]
 body.raw.json(
     {
     "email": "",
@@ -24,7 +24,7 @@ body.raw.json(
 }
 )
 
-http://localhost:3000/api/v1/users/:userId [PUT] - Completed (80/100)
+http://localhost:3000/api/v1/users/:userId [PUT] - Completed (80/100) - (User Input Exist for Validation) [TO DO]
 body.raw.json(
     {
     "password": "",
@@ -34,4 +34,4 @@ body.raw.json(
 }
 )
 
-http://localhost:3000/api/v1/users/:userId [DELETE] - Completed (80/100)
+http://localhost:3000/api/v1/users/:userId [DELETE] - Completed (80/100) - (User Input Doesn't Exist for Validation)

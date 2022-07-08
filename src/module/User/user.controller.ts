@@ -2,6 +2,7 @@ import { Request, Response } from "express"
 import { UserRepository } from "./user.repository"
 import { UserService } from "./user.service"
 import { CreateUserInput, EditUserInput } from "./user.types"
+import { createUserInputValidationSchema, editUserValidationInput } from "./user.validation"
 
 const userRepo = new UserRepository()
 const userService = new UserService(userRepo)
@@ -30,6 +31,12 @@ export const createUser = async (req: Request, res: Response) => {
         gender
     }
 
+    const createUserInputValidated = createUserInputValidationSchema.validate(createUserInput, {abortEarly: false})
+    
+    if(createUserInputValidated.error) {
+        return res.status(401).json({errors: createUserInputValidated.error?.details})
+    }
+
     const user = await userService.createUser(createUserInput)
 
 
@@ -53,6 +60,13 @@ export const editUser = async(req: Request, res: Response) => {
     }
 
     const userId = req.params.userId
+
+    const editUserInputValidated = editUserValidationInput.validate(editUserInput, {abortEarly: false})
+
+    if(editUserInputValidated.error){
+        return res.status(401).json({errors: editUserInputValidated.error?.details})
+    }
+
     const editedUser = await userService.editUser(userId, editUserInput)
     if(!editedUser) {
         return res.json({message: "User with this ID does not exist"})

@@ -6,8 +6,8 @@ export class UserRepository {
     async createUser(createUserInput: CreateUserInput): Promise<User | null> {
         // const checkUser = await this.getUserByEmail(createUserInput.email)
         // if(checkUser){}
-        const doesUserExist = await userModel.findOne({email: createUserInput.email}) 
-        if(doesUserExist){
+        const existingUser = await userModel.findOne({email: createUserInput.email}) 
+        if(existingUser){
             return null
         }
         const userToSave = new userModel(createUserInput)
