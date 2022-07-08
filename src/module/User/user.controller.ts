@@ -1,4 +1,4 @@
-import { Request, Response } from "express"
+import { NextFunction, Request, Response } from "express"
 import { UserRepository } from "./user.repository"
 import { UserService } from "./user.service"
 import { CreateUserInput, EditUserInput } from "./user.types"
@@ -19,10 +19,7 @@ export const getUsers = async (req: Request, res: Response) => {
     return res.json(listOfAllUsers)
 }
 
-export const createUser = async (req: Request, res: Response) => {
-
-      // TODO - 1. Accept Request and pass it to service
-
+export const createUser = async (req: Request, res: Response, next: NextFunction) => {
     const {name, age, password, email, gender} = req.body
 
     const createUserInput: CreateUserInput = {
@@ -39,15 +36,12 @@ export const createUser = async (req: Request, res: Response) => {
         return res.status(401).json({errors: createUserInputValidated.error?.details})
     }
 
-    const user = await userService.createUser(createUserInput)
-
-
-    // TODO - 2. Return response
-    console.log("This is from user.controller.ts", user)
-    if(user){
-        return res.json(user)
+    try {
+        const user = await userService.createUser(createUserInput)
+        return res.status(200).json(user)
+    } catch (error) {
+        next(error)
     }
-    return res.json({message: "User with that e-mail already exist"})
 
 }
 

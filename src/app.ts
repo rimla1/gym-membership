@@ -1,7 +1,7 @@
 import {config} from 'dotenv'
 config()
 
-import express from 'express';
+import express, { NextFunction, Request, Response } from 'express';
 import mongoose from 'mongoose';
 import { userRouter } from './module/User/user.routes';
 import { authRouter } from './module/Auth/auth.routes'
@@ -17,10 +17,13 @@ app.use(express.json())
 app.use("/api/v1/users", userRouter)
 app.use("/api/v1/logins", authRouter)
 
+app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+    res.status(500).json({message: err.message})
+  })
+
 mongoose.connect(MONGODB_URI).then(() => {
     console.log("Connected to the db")
     app.listen(PORT, () => {
         console.log(`Up and running on port ${PORT}`)
     })
 })
-
