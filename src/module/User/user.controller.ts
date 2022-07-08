@@ -38,7 +38,7 @@ export const createUser = async (req: Request, res: Response, next: NextFunction
         const user = await userService.createUser(createUserInput)
         return res.status(200).json(user)
     } catch (error) {
-        next(error)
+        return next(error)
     }
 
 }
@@ -65,16 +65,19 @@ export const editUser = async(req: Request, res: Response, next: NextFunction) =
         const editedUser = await userService.editUser(userId, editUserInput)
         return res.json(editedUser)
     } catch (error) {
-        next(error)
+       return next(error)
     }
 
 }
 
-export const deleteUser = async(req: Request, res: Response) => {
+export const deleteUser = async(req: Request, res: Response, next: NextFunction) => {
     const userId = req.params.userId
-    const isUserDeleted = await userService.deleteUser(userId)
-    if (!isUserDeleted) {
-        return res.json({message: "User does not exist!"})
+    
+    try {
+        const isUserDeleted = await userService.deleteUser(userId)
+        return res.json(isUserDeleted)
+    } catch (error) {
+        return next(error)
     }
-    return res.json(isUserDeleted)
+    
 }
