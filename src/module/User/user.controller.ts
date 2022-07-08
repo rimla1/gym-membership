@@ -8,8 +8,6 @@ const userRepo = new UserRepository()
 const userService = new UserService(userRepo)
 
 
-
-
 export const getUsers = async (req: Request, res: Response) => {
     const listOfAllUsers = await userService.getUsers()
     if(listOfAllUsers.length === 0){
@@ -45,7 +43,7 @@ export const createUser = async (req: Request, res: Response, next: NextFunction
 
 }
 
-export const editUser = async(req: Request, res: Response) => {
+export const editUser = async(req: Request, res: Response, next: NextFunction) => {
     const {name, age, password,  gender} = req.body
 
     const editUserInput: EditUserInput = {
@@ -63,11 +61,13 @@ export const editUser = async(req: Request, res: Response) => {
         return res.status(401).json({errors: editUserInputValidated.error?.details})
     }
 
-    const editedUser = await userService.editUser(userId, editUserInput)
-    if(!editedUser) {
-        return res.json({message: "User with this ID does not exist"})
+    try {
+        const editedUser = await userService.editUser(userId, editUserInput)
+        return res.json(editedUser)
+    } catch (error) {
+        next(error)
     }
-    return res.json(editedUser)
+
 }
 
 export const deleteUser = async(req: Request, res: Response) => {

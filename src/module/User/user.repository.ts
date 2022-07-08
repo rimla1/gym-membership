@@ -3,7 +3,7 @@ import { userModel } from "./user.model"
 import { CreateUserInput, EditUserInput, User } from "./user.types"
 
 export class UserRepository {
-    async createUser(createUserInput: CreateUserInput): Promise<User | null> {
+    async createUser(createUserInput: CreateUserInput): Promise<User> {
 
         const existingUser = await userModel.findOne({email: createUserInput.email}) 
         if(existingUser){
@@ -57,11 +57,11 @@ export class UserRepository {
     }
 
  
-    async editUser(userId: string, editUserInput: EditUserInput): Promise<User | null> {
-        const userToEdit = await userModel.findById(userId)
+    async editUser(userId: string, editUserInput: EditUserInput): Promise<User> {
 
+        const userToEdit = await userModel.findById(userId)
         if(!userToEdit) {
-            return null
+            throw new Error(`User with id: ${userId} does not exist`)
         }
 
         userToEdit.set(editUserInput)
