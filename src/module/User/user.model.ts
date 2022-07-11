@@ -1,6 +1,15 @@
-import {Schema, model} from 'mongoose'
+import mongoose, {Schema, model, Mongoose} from 'mongoose'
 
-const userSchema = new Schema({
+export interface IUser {
+    name: string;
+    email: string;
+    password: string;
+    age: number;
+    gender: string;
+    _id: mongoose.ObjectId
+  }
+
+const userSchema = new Schema<IUser>({
     name: {
         type: String,
         required: true
@@ -23,4 +32,4 @@ const userSchema = new Schema({
     }
 })
 
-export const userModel = model("user", userSchema)
+export const userModel = model<IUser>("user", userSchema)

@@ -1,4 +1,4 @@
-import { userModel } from "./user.model"
+import { IUser, userModel } from "./user.model"
 import { CreateUserInput, EditUserInput, User } from "./user.types"
 import bycrypt from "bcrypt"
 
@@ -18,17 +18,9 @@ export class UserRepository {
         const userToSave = new userModel(createUserInput)
         const savedUser = await userToSave.save()
 
-        const user:User = {
-            name: savedUser.name,
-            age: savedUser.age,
-            email: savedUser.email,
-            password: savedUser.password,
-            gender: savedUser.gender,
-            id: savedUser._id.toString()
-        }
+        const appUser = this.mapDBUserToAppUser(savedUser)
 
-        console.log("This is from user.repository.ts", user)
-        return user
+        return appUser
     }
 
     async getUsers(): Promise<User[]> {
@@ -36,69 +28,72 @@ export class UserRepository {
 
         const mappedUsers:User[] = []
         users.forEach(user => {
-            mappedUsers.push({name: user.name, age: user.age, email: user.email, gender: user.gender , password: user.password, id: user._id.toString()})
+            const appUser = this.mapDBUserToAppUser(user)
+
+            mappedUsers.push(appUser)
         })
         return mappedUsers
     }
-    // Send email & password instead of email only?
-    async getUserByEmail(email: string): Promise<User | null> {
+
+    async getUserByEmail(email: string): Promise<User> {
         const userByEmail = await userModel.findOne({email: email})
         if(!userByEmail) {
-            return null
+            throw new Error(`User with email ${email} doesn't exists`)
         }
 
-        const user: User = {
-            name: userByEmail.name,
-            age: userByEmail.age,
-            email: userByEmail.email,
-            password: userByEmail.password,
-            gender: userByEmail.gender,
-            id: userByEmail._id.toString()
+        const appUser = this.mapDBUserToAppUser(userByEmail)
+
+        return appUser
+    }
+
+    async getUserById(id: string): Promise<User> {
+        const userById = await userModel.findById(id)
+        if(!userById) {
+                throw new Error(`User with id ${id} doesn't exists`)
         }
 
-        console.log("This is from user.repository.ts", user) 
+        const appUser = this.mapDBUserToAppUser(userById)
 
-        return user
+        return appUser
     }
 
  
     async editUser(userId: string, editUserInput: EditUserInput): Promise<User> {
-        try {
-            const userToEdit = await userModel.findById(userId)
-            if(!userToEdit) {
-                 throw new Error(`User with id: ${userId} does not exist`)
-            }
-    
-            userToEdit.set(editUserInput)
-    
-            const editedUser = await userToEdit.save()
-    
-            const user: User = {
-                name: editedUser.name,
-                age: editedUser.age,
-                email: editedUser.email,
-                password: editedUser.password,
-                gender: editedUser.gender,
-                id: editedUser._id.toString()
-            }
-    
-            return user
-        } catch {
-            throw new Error("Something went wrong in database")
+
+       try {
+        const successfullEditedUser = await userModel.findOneAndUpdate({_id: userId}, {...editUserInput}, {new: true})
+
+        if (!successfullEditedUser) {
+            throw new Error("User not found or update was not sucessfull")
         }
 
+        const appUser = this.mapDBUserToAppUser(successfullEditedUser)
+
+        return appUser
+       } catch (error) {
+            throw new Error("Something went wrong with database (editUser)")
+       }
     }
 
     async deleteUser(userId: string): Promise<boolean> {
         try {
-        const userToDelete = await userModel.findByIdAndDelete(userId)
-        if(!userToDelete) {
-            throw new Error(`User with id: ${userId} does not exist`)
-        }
+        await userModel.findByIdAndDelete(userId)
         return true
         } catch {
             throw new Error("Something wrong with the database");
         }
     }
 
+    private mapDBUserToAppUser(userFromDB: IUser): User{
+        const user: User = {
+            name: userFromDB.name,
+            age: userFromDB.age,
+            email: userFromDB.email,
+            password: userFromDB.password,
+            gender: userFromDB.gender,
+            id: userFromDB._id.toString()
+        }
+
+        return user
+    }
 }
