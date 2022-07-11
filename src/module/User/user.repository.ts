@@ -1,13 +1,22 @@
 import { userModel } from "./user.model"
 import { CreateUserInput, EditUserInput, User } from "./user.types"
+import bycrypt from "bcrypt"
 
 export class UserRepository {
+
+    async hashPassword(passwordToHash: string){
+            const hashedPassword = await bycrypt.hash(passwordToHash, 10)
+            return hashedPassword;
+    }
+
     async createUser(createUserInput: CreateUserInput): Promise<User> {
 
         const existingUser = await userModel.findOne({email: createUserInput.email}) 
         if(existingUser){
             throw new Error(`User with email ${createUserInput.email} alreay exists`)
         }
+
+        const hashedPassword = await this.hashPassword(createUserInput.password)
 
         const userToSave = new userModel(createUserInput)
         const savedUser = await userToSave.save()
@@ -16,7 +25,7 @@ export class UserRepository {
             name: savedUser.name,
             age: savedUser.age,
             email: savedUser.email,
-            password: savedUser.password,
+            password: hashedPassword,
             gender: savedUser.gender,
             id: savedUser._id.toString()
         }
@@ -57,31 +66,35 @@ export class UserRepository {
 
  
     async editUser(userId: string, editUserInput: EditUserInput): Promise<User> {
-
-        const userToEdit = await userModel.findById(userId)
-        if(!userToEdit) {
-            throw new Error(`User with id: ${userId} does not exist`)
+        try {
+            const userToEdit = await userModel.findById(userId)
+            if(!userToEdit) {
+                 throw new Error(`User with id: ${userId} does not exist`)
+            }
+    
+            userToEdit.set(editUserInput)
+    
+            const editedUser = await userToEdit.save()
+    
+            const user: User = {
+                name: editedUser.name,
+                age: editedUser.age,
+                email: editedUser.email,
+                password: editedUser.password,
+                gender: editedUser.gender,
+                id: editedUser._id.toString()
+            }
+    
+            return user
+        } catch {
+            throw new Error("Something went wrong in database")
         }
 
-        userToEdit.set(editUserInput)
-
-        const editedUser = await userToEdit.save()
-
-        const user: User = {
-            name: editedUser.name,
-            age: editedUser.age,
-            email: editedUser.email,
-            password: editedUser.password,
-            gender: editedUser.gender,
-            id: editedUser._id.toString()
-        }
-
-        return user
     }
 
     async deleteUser(userId: string): Promise<boolean> {
         try {
-            const userToDelete = await userModel.findByIdAndDelete(userId)
+        const userToDelete = await userModel.findByIdAndDelete(userId)
         if(!userToDelete) {
             throw new Error(`User with id: ${userId} does not exist`)
         }

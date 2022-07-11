@@ -4,8 +4,10 @@ import { UserService } from "./user.service"
 import { CreateUserInput, EditUserInput } from "./user.types"
 import { createUserInputValidationSchema, editUserValidationInput } from "./user.validation"
 
+
 const userRepo = new UserRepository()
 const userService = new UserService(userRepo)
+
 
 
 export const getUsers = async (req: Request, res: Response) => {
