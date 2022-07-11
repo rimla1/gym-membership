@@ -4,7 +4,8 @@ import { CreateUserInput, EditUserInput, User } from "./user.types"
 interface IUserService {
     createUser(createUserInput: CreateUserInput): Promise<User | null>
     getUsers(): Promise<User[]>
-    editUser(userId: string, editUserInput: EditUserInput): Promise<User | null>
+    getUserById(id: string): Promise<User>
+    editUser(userId: string, editUserInput: EditUserInput): Promise<User>
     deleteUser(userId: string): Promise<boolean>
     getUserByEmail(email: string): Promise<User | null>
 }
@@ -22,16 +23,14 @@ export class UserService implements IUserService {
         return user
     }
 
-    
-
-    async deleteUser(userId: string): Promise<boolean> {
-        const isUserDeleted = await this.userRepo.deleteUser(userId)
-        return isUserDeleted
-    }
-
     async getUsers(): Promise<User[]> {
         const users = await this.userRepo.getUsers()
         return users
+    }
+
+    async getUserById(id: string): Promise<User> {
+        const user = await this.userRepo.getUserById(id)
+        return user
     }
 
      async createUser(createUserInput: CreateUserInput): Promise<User | null> {
@@ -39,14 +38,18 @@ export class UserService implements IUserService {
         return user
     }
 
-    async editUser(userId: string, editUserInput: EditUserInput): Promise<User | null> {
+    async deleteUser(userId: string): Promise<boolean> {
+        const userToDelete = await this.getUserById(userId)
+        if(userToDelete){
+            const isUserDeleted = await this.userRepo.deleteUser(userId)
+            return isUserDeleted
+        }
+        return false
+    }
 
-        // return editedUser
-        
-        // TODO 1 ova funkcija primi argumente iz kontrolera koje treba da prosledi dalje repo
+    async editUser(userId: string, editUserInput: EditUserInput): Promise<User> {
         const editedUser = await this.userRepo.editUser(userId, editUserInput)
-
-        // TODO 2 Nakon sto servis zavrsi, repoistory prima nazad editovanog usera ili null i salje ga controleru
         return editedUser
     }
+
 }
