@@ -1,5 +1,6 @@
 import { UserRepository } from "./user.repository"
 import { CreateUserInput, EditUserInput, User } from "./user.types"
+import bcrypt from "bcrypt";
 
 interface IUserService {
     createUser(createUserInput: CreateUserInput): Promise<User | null>
@@ -35,7 +36,8 @@ export class UserService implements IUserService {
     }
 
      async createUser(createUserInput: CreateUserInput): Promise<User | null> {
-        const user = await this.userRepo.createUser(createUserInput)
+        const hashedPassword = await this.hashPassword(createUserInput.password)
+        const user = await this.userRepo.createUser({...createUserInput, password: hashedPassword})
         return user
     }
 
@@ -49,4 +51,9 @@ export class UserService implements IUserService {
         // TODO 2 Nakon sto servis zavrsi, repoistory prima nazad editovanog usera ili null i salje ga controleru
         return editedUser
     }
+
+    private async hashPassword(passwordToHash: string){
+        const hashedPassword = await bcrypt.hash(passwordToHash, 10)
+        return hashedPassword;
+}
 }

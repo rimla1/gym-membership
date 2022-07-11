@@ -4,10 +4,7 @@ import bycrypt from "bcrypt"
 
 export class UserRepository {
 
-    async hashPassword(passwordToHash: string){
-            const hashedPassword = await bycrypt.hash(passwordToHash, 10)
-            return hashedPassword;
-    }
+
 
     async createUser(createUserInput: CreateUserInput): Promise<User> {
 
@@ -16,7 +13,7 @@ export class UserRepository {
             throw new Error(`User with email ${createUserInput.email} alreay exists`)
         }
 
-        const hashedPassword = await this.hashPassword(createUserInput.password)
+        
 
         const userToSave = new userModel(createUserInput)
         const savedUser = await userToSave.save()
@@ -25,7 +22,7 @@ export class UserRepository {
             name: savedUser.name,
             age: savedUser.age,
             email: savedUser.email,
-            password: hashedPassword,
+            password: savedUser.password,
             gender: savedUser.gender,
             id: savedUser._id.toString()
         }
@@ -43,7 +40,7 @@ export class UserRepository {
         })
         return mappedUsers
     }
-
+    // Send email & password instead of email only?
     async getUserByEmail(email: string): Promise<User | null> {
         const userByEmail = await userModel.findOne({email: email})
         if(!userByEmail) {
