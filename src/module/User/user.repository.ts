@@ -1,4 +1,3 @@
-import { ErrorNotFound } from "../../shared/types"
 import { userModel } from "./user.model"
 import { CreateUserInput, EditUserInput, User } from "./user.types"
 
