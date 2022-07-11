@@ -29,10 +29,10 @@ export class UserRepository {
         return mappedUsers
     }
 
-    async getUserByEmail(email: string): Promise<User | null> {
+    async getUserByEmail(email: string): Promise<User> {
         const userByEmail = await userModel.findOne({email: email})
         if(!userByEmail) {
-            return null
+            throw new Error(`User with email ${email} doesn't exists`)
         }
 
         const appUser = this.mapDBUserToAppUser(userByEmail)
@@ -54,18 +54,19 @@ export class UserRepository {
  
     async editUser(userId: string, editUserInput: EditUserInput): Promise<User> {
 
-        const userToEdit = await userModel.findById(userId)
-        if(!userToEdit) {
-            throw new Error(`User with id: ${userId} does not exist`)
+       try {
+        const successfullEditedUser = await userModel.findOneAndUpdate({_id: userId}, {...editUserInput}, {new: true})
+
+        if (!successfullEditedUser) {
+            throw new Error("User not found or update was not sucessfull")
         }
 
-        userToEdit.set(editUserInput)
-
-        const editedUser = await userToEdit.save()
-
-        const appUser = this.mapDBUserToAppUser(editedUser)
+        const appUser = this.mapDBUserToAppUser(successfullEditedUser)
 
         return appUser
+       } catch (error) {
+            throw new Error("Something went wrong with database (editUser)")
+       }
     }
 
     async deleteUser(userId: string): Promise<boolean> {
