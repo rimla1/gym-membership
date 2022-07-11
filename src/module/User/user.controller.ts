@@ -21,7 +21,7 @@ export const getUser = async (req: Request, res: Response, next: NextFunction) =
     const {userId} = req.params;
     try {
         const user = await userService.getUserById(userId)
-        return res.json(user)
+        return res.status(200).json(user)
     } catch (error) {
        return next(error) 
     }
