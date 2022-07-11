@@ -17,6 +17,16 @@ export const getUsers = async (req: Request, res: Response) => {
     return res.json(listOfAllUsers)
 }
 
+export const getUser = async (req: Request, res: Response, next: NextFunction) => {
+    const {userId} = req.params;
+    try {
+        const user = await userService.getUserById(userId)
+        return res.json(user)
+    } catch (error) {
+       return next(error) 
+    }
+}
+
 export const createUser = async (req: Request, res: Response, next: NextFunction) => {
     const {name, age, password, email, gender} = req.body
 
@@ -81,3 +91,4 @@ export const deleteUser = async(req: Request, res: Response, next: NextFunction)
     }
     
 }
+

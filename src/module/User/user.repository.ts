@@ -55,6 +55,24 @@ export class UserRepository {
         return user
     }
 
+    async getUserById(id: string): Promise<User> {
+        const userById = await userModel.findById(id)
+        if(!userById) {
+                throw new Error(`User with id ${id} doesn't exists`)
+        }
+
+        const user: User = {
+            name: userById.name,
+            age: userById.age,
+            email: userById.email,
+            password: userById.password,
+            gender: userById.gender,
+            id: userById._id.toString()
+        }
+
+        return user
+    }
+
  
     async editUser(userId: string, editUserInput: EditUserInput): Promise<User> {
 
@@ -81,14 +99,10 @@ export class UserRepository {
 
     async deleteUser(userId: string): Promise<boolean> {
         try {
-            const userToDelete = await userModel.findByIdAndDelete(userId)
-        if(!userToDelete) {
-            throw new Error(`User with id: ${userId} does not exist`)
-        }
+        await userModel.findByIdAndDelete(userId)
         return true
         } catch {
             throw new Error("Something wrong with the database");
         }
     }
-
 }

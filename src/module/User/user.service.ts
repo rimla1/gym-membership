@@ -4,6 +4,7 @@ import { CreateUserInput, EditUserInput, User } from "./user.types"
 interface IUserService {
     createUser(createUserInput: CreateUserInput): Promise<User | null>
     getUsers(): Promise<User[]>
+    getUserById(id: string): Promise<User>
     editUser(userId: string, editUserInput: EditUserInput): Promise<User | null>
     deleteUser(userId: string): Promise<boolean>
     getUserByEmail(email: string): Promise<User | null>
@@ -25,13 +26,22 @@ export class UserService implements IUserService {
     
 
     async deleteUser(userId: string): Promise<boolean> {
-        const isUserDeleted = await this.userRepo.deleteUser(userId)
-        return isUserDeleted
+        const userToDelete = await this.getUserById(userId)
+        if(userToDelete){
+            const isUserDeleted = await this.userRepo.deleteUser(userId)
+            return isUserDeleted
+        }
+        return false
     }
 
     async getUsers(): Promise<User[]> {
         const users = await this.userRepo.getUsers()
         return users
+    }
+
+    async getUserById(id: string): Promise<User> {
+        const user = await this.userRepo.getUserById(id)
+        return user
     }
 
      async createUser(createUserInput: CreateUserInput): Promise<User | null> {
@@ -49,4 +59,5 @@ export class UserService implements IUserService {
         // TODO 2 Nakon sto servis zavrsi, repoistory prima nazad editovanog usera ili null i salje ga controleru
         return editedUser
     }
+
 }
