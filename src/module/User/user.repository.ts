@@ -1,4 +1,4 @@
-import { userModel } from "./user.model"
+import { IUser, userModel } from "./user.model"
 import { CreateUserInput, EditUserInput, User } from "./user.types"
 
 export class UserRepository {
@@ -12,17 +12,9 @@ export class UserRepository {
         const userToSave = new userModel(createUserInput)
         const savedUser = await userToSave.save()
 
-        const user:User = {
-            name: savedUser.name,
-            age: savedUser.age,
-            email: savedUser.email,
-            password: savedUser.password,
-            gender: savedUser.gender,
-            id: savedUser._id.toString()
-        }
+        const appUser = this.mapDBUserToAppUser(savedUser)
 
-        console.log("This is from user.repository.ts", user)
-        return user
+        return appUser
     }
 
     async getUsers(): Promise<User[]> {
@@ -30,7 +22,9 @@ export class UserRepository {
 
         const mappedUsers:User[] = []
         users.forEach(user => {
-            mappedUsers.push({name: user.name, age: user.age, email: user.email, gender: user.gender , password: user.password, id: user._id.toString()})
+            const appUser = this.mapDBUserToAppUser(user)
+
+            mappedUsers.push(appUser)
         })
         return mappedUsers
     }
@@ -41,18 +35,9 @@ export class UserRepository {
             return null
         }
 
-        const user: User = {
-            name: userByEmail.name,
-            age: userByEmail.age,
-            email: userByEmail.email,
-            password: userByEmail.password,
-            gender: userByEmail.gender,
-            id: userByEmail._id.toString()
-        }
+        const appUser = this.mapDBUserToAppUser(userByEmail)
 
-        console.log("This is from user.repository.ts", user) 
-
-        return user
+        return appUser
     }
 
     async getUserById(id: string): Promise<User> {
@@ -61,16 +46,9 @@ export class UserRepository {
                 throw new Error(`User with id ${id} doesn't exists`)
         }
 
-        const user: User = {
-            name: userById.name,
-            age: userById.age,
-            email: userById.email,
-            password: userById.password,
-            gender: userById.gender,
-            id: userById._id.toString()
-        }
+        const appUser = this.mapDBUserToAppUser(userById)
 
-        return user
+        return appUser
     }
 
  
@@ -85,16 +63,9 @@ export class UserRepository {
 
         const editedUser = await userToEdit.save()
 
-        const user: User = {
-            name: editedUser.name,
-            age: editedUser.age,
-            email: editedUser.email,
-            password: editedUser.password,
-            gender: editedUser.gender,
-            id: editedUser._id.toString()
-        }
+        const appUser = this.mapDBUserToAppUser(editedUser)
 
-        return user
+        return appUser
     }
 
     async deleteUser(userId: string): Promise<boolean> {
@@ -104,5 +75,18 @@ export class UserRepository {
         } catch {
             throw new Error("Something wrong with the database");
         }
+    }
+
+    private mapDBUserToAppUser(userFromDB: IUser): User{
+        const user: User = {
+            name: userFromDB.name,
+            age: userFromDB.age,
+            email: userFromDB.email,
+            password: userFromDB.password,
+            gender: userFromDB.gender,
+            id: userFromDB._id.toString()
+        }
+
+        return user
     }
 }
