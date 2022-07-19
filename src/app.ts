@@ -5,6 +5,7 @@ import express, { NextFunction, Request, Response } from 'express';
 import mongoose from 'mongoose';
 import { userRouter } from './module/User/user.routes';
 import { authRouter } from './module/Auth/auth.routes'
+import { AlreadyExistsError, ValidationError } from './shared/errors';
 
 const PORT = 3000;
 
@@ -18,7 +19,13 @@ app.use("/api/v1/users", userRouter)
 app.use("/api/v1/logins", authRouter)
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-    res.status(500).json({message: err.message})
+    if(err instanceof AlreadyExistsError) {
+        return res.status(err.statusCode).json({message: err.message})
+    } else if (err instanceof ValidationError) {
+        return res.status(err.statusCode).json({errors: err.errors})
+        
+    }
+    return res.status(500).json({message: "Something went wrong"});
   })
 
 mongoose.connect(MONGODB_URI).then(() => {

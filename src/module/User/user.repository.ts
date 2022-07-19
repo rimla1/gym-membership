@@ -1,26 +1,28 @@
 import { IUser, userModel } from "./user.model"
 import { CreateUserInput, EditUserInput, User } from "./user.types"
 import bycrypt from "bcrypt"
+import { AlreadyExistsError } from "../../shared/errors"
 
 export class UserRepository {
 
 
 
     async createUser(createUserInput: CreateUserInput): Promise<User> {
-
-        const existingUser = await userModel.findOne({email: createUserInput.email}) 
-        if(existingUser){
-            throw new Error(`User with email ${createUserInput.email} alreay exists`)
+        try {
+            const existingUser = await userModel.findOne({email: createUserInput.email}) 
+            if(existingUser){
+                throw new AlreadyExistsError(`User with email ${createUserInput.email} alreay exists`)
+            }
+            const userToSave = new userModel(createUserInput)
+            const savedUser = await userToSave.save()
+    
+            const appUser = this.mapDBUserToAppUser(savedUser)
+    
+            return appUser
+        } catch (error) {
+            throw error
         }
 
-        
-
-        const userToSave = new userModel(createUserInput)
-        const savedUser = await userToSave.save()
-
-        const appUser = this.mapDBUserToAppUser(savedUser)
-
-        return appUser
     }
 
     async getUsers(): Promise<User[]> {
