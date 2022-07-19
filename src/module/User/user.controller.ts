@@ -11,13 +11,19 @@ const userService = new UserService(userRepo)
 
 
 
-export const getUsers = async (req: Request, res: Response) => {
-    const listOfAllUsers = await userService.getUsers()
-    if(listOfAllUsers.length === 0){
-        return res.json({message: "No users created yet!"})
+export const getUsers = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        throw new Error("Ups, you cannot get all users!")
+        const listOfAllUsers = await userService.getUsers()
+        if(listOfAllUsers.length === 0){
+            return res.json({message: "No users created yet!"})
+        }
+        console.log(listOfAllUsers.length)
+        return res.json(listOfAllUsers)
+    } catch (error) {
+        return next(error)
     }
-    console.log(listOfAllUsers.length)
-    return res.json(listOfAllUsers)
+
 }
 
 export const getUser = async (req: Request, res: Response, next: NextFunction) => {

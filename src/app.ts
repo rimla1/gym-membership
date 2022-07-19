@@ -25,7 +25,7 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
         return res.status(err.statusCode).json({errors: err.errors})
         
     }
-    return res.status(500).json({message: "Something went wrong"});
+    return res.status(500).json({message: err.message || "Something went wrong"});
   })
 
 mongoose.connect(MONGODB_URI).then(() => {
