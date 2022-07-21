@@ -1,7 +1,7 @@
 import { IUser, userModel } from "./user.model"
 import { CreateUserInput, EditUserInput, User } from "./user.types"
 import bycrypt from "bcrypt"
-import { AlreadyExistsError, UnexpectedError } from "../../shared/errors"
+import { AlreadyExistsError, NotFoundError } from "../../shared/errors"
 
 export class UserRepository {
 
@@ -28,7 +28,9 @@ export class UserRepository {
     async getUsers(): Promise<User[]> {
         try {
             const users = await userModel.find();
-
+            if(!users){
+                throw new NotFoundError("Users Not Found")
+            }
             const mappedUsers:User[] = []
             users.forEach(user => {
                 const appUser = this.mapDBUserToAppUser(user)

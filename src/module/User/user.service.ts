@@ -21,7 +21,6 @@ export class UserService implements IUserService {
      async getUserByEmail(email: string): Promise<User> {
         try {
             const user = await this.userRepo.getUserByEmail(email)
-            console.log("This is from user.service.ts", user)
             return user  
         } catch (error) {
             throw error
@@ -90,6 +89,5 @@ export class UserService implements IUserService {
         } catch (error) {
             throw error
         }
-
 }
 }

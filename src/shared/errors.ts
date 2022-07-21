@@ -32,6 +32,16 @@ export class ValidationError extends Error {
     }
 }
 
+export class NotFoundError extends Error {
+    statusCode: number;
+    errors: string;
+    constructor(errors: string){
+        super();
+        this.errors = errors;
+        this.statusCode = 404;
+    }
+}
+
 export class UnexpectedError extends Error {
     statusCode: number;
     errors: string;
@@ -41,3 +51,4 @@ export class UnexpectedError extends Error {
         this.statusCode = 500;
     }
 }
+

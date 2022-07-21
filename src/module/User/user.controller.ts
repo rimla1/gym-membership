@@ -17,8 +17,6 @@ export const getUsers = async (req: Request, res: Response, next: NextFunction) 
         if(users.length === 0){
             return res.json({message: "No users created yet!"})
         }
-        // What if we have users in database but we cannot received them [Default error?]
-        console.log(users.length)
         return res.json(users)
     } catch (error) {
         return next(error)
@@ -30,8 +28,6 @@ export const getUser = async (req: Request, res: Response, next: NextFunction) =
     const {userId} = req.params;
     try {
         const user = await userService.getUserById(userId)
-        // User with that Id is not found? [repo handling]
-        // User is found with that id but we cannot received that user [Default error?]
         return res.status(200).json(user)
     } catch (error) {
        return next(error) 
@@ -48,14 +44,11 @@ export const createUser = async (req: Request, res: Response, next: NextFunction
         email,
         gender
     }
-
-    const createUserInputValidated = createUserInputValidationSchema.validate(createUserInput, {abortEarly: false})
-    
-    if(createUserInputValidated.error) {
-        return res.status(401).json({errors: createUserInputValidated.error?.details})
-    }
-
     try {
+    const createUserInputValidated = createUserInputValidationSchema.validate(createUserInput, {abortEarly: false})
+    if(createUserInputValidated.error) {
+        throw new ValidationError(createUserInputValidated.error?.details)
+    }
         const user = await userService.createUser(createUserInput)
         return res.status(200).json(user)
     } catch (error) {
