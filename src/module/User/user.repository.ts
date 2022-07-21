@@ -1,7 +1,7 @@
 import { IUser, userModel } from "./user.model"
 import { CreateUserInput, EditUserInput, User } from "./user.types"
 import bycrypt from "bcrypt"
-import { AlreadyExistsError } from "../../shared/errors"
+import { AlreadyExistsError, UnexpectedError } from "../../shared/errors"
 
 export class UserRepository {
 
@@ -26,15 +26,20 @@ export class UserRepository {
     }
 
     async getUsers(): Promise<User[]> {
-        const users = await userModel.find();
+        try {
+            const users = await userModel.find();
 
-        const mappedUsers:User[] = []
-        users.forEach(user => {
-            const appUser = this.mapDBUserToAppUser(user)
+            const mappedUsers:User[] = []
+            users.forEach(user => {
+                const appUser = this.mapDBUserToAppUser(user)
+    
+                mappedUsers.push(appUser)
+            })
+            return mappedUsers
+        } catch (error) {
+            throw error
+        }
 
-            mappedUsers.push(appUser)
-        })
-        return mappedUsers
     }
 
     async getUserByEmail(email: string): Promise<User> {

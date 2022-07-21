@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express"
-import { ValidationError } from "../../shared/errors"
+import { DoesNotExistsError, UnexpectedError, ValidationError } from "../../shared/errors"
 import { UserRepository } from "./user.repository"
 import { UserService } from "./user.service"
 import { CreateUserInput, EditUserInput } from "./user.types"
@@ -13,13 +13,13 @@ const userService = new UserService(userRepo)
 
 export const getUsers = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        throw new Error("Ups, you cannot get all users!")
-        const listOfAllUsers = await userService.getUsers()
-        if(listOfAllUsers.length === 0){
+        const users = await userService.getUsers()
+        if(users.length === 0){
             return res.json({message: "No users created yet!"})
         }
-        console.log(listOfAllUsers.length)
-        return res.json(listOfAllUsers)
+        // What if we have users in database but we cannot received them [Default error?]
+        console.log(users.length)
+        return res.json(users)
     } catch (error) {
         return next(error)
     }
@@ -30,6 +30,8 @@ export const getUser = async (req: Request, res: Response, next: NextFunction) =
     const {userId} = req.params;
     try {
         const user = await userService.getUserById(userId)
+        // User with that Id is not found? [repo handling]
+        // User is found with that id but we cannot received that user [Default error?]
         return res.status(200).json(user)
     } catch (error) {
        return next(error) 
@@ -79,6 +81,7 @@ export const editUser = async(req: Request, res: Response, next: NextFunction) =
     const editUserInputValidated = editUserValidationInput.validate(editUserInput, {abortEarly: false})
 
     if(editUserInputValidated.error){
+        console.log("Hello from here!")
         throw new ValidationError(editUserInputValidated.error?.details)
     }
         const editedUser = await userService.editUser(userId, editUserInput)

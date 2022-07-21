@@ -8,7 +8,7 @@ interface IUserService {
     getUserById(id: string): Promise<User>
     editUser(userId: string, editUserInput: EditUserInput): Promise<User>
     deleteUser(userId: string): Promise<boolean>
-    getUserByEmail(email: string): Promise<User | null>
+    getUserByEmail(email: string): Promise<User>
 }
 
 export class UserService implements IUserService {
@@ -18,44 +18,78 @@ export class UserService implements IUserService {
         this.userRepo = userRepo
     }
 
-     async getUserByEmail(email: string): Promise<User | null> {
-        const user = await this.userRepo.getUserByEmail(email)
-        console.log("This is from user.service.ts", user)
-        return user
+     async getUserByEmail(email: string): Promise<User> {
+        try {
+            const user = await this.userRepo.getUserByEmail(email)
+            console.log("This is from user.service.ts", user)
+            return user  
+        } catch (error) {
+            throw error
+        }
+
     }
 
     async getUsers(): Promise<User[]> {
-        const users = await this.userRepo.getUsers()
-        return users
+        try {
+            const users = await this.userRepo.getUsers()
+            return users 
+        } catch (error) {
+             throw error
+        }
     }
 
     async getUserById(id: string): Promise<User> {
-        const user = await this.userRepo.getUserById(id)
-        return user
+        try {
+            const user = await this.userRepo.getUserById(id)
+            return user 
+        } catch (error) {
+            throw error
+        }
+
     }
 
      async createUser(createUserInput: CreateUserInput): Promise<User | null> {
-        const hashedPassword = await this.hashPassword(createUserInput.password)
-        const user = await this.userRepo.createUser({...createUserInput, password: hashedPassword})
-        return user
+        try {
+            const hashedPassword = await this.hashPassword(createUserInput.password)
+            const user = await this.userRepo.createUser({...createUserInput, password: hashedPassword})
+            return user
+        } catch (error) {
+            throw error
+        }
+
     }
 
     async deleteUser(userId: string): Promise<boolean> {
-        const userToDelete = await this.getUserById(userId)
-        if(userToDelete){
-            const isUserDeleted = await this.userRepo.deleteUser(userId)
-            return isUserDeleted
+        try {
+            const userToDelete = await this.getUserById(userId)
+            if(userToDelete){
+                const isUserDeleted = await this.userRepo.deleteUser(userId)
+                return isUserDeleted
+            }
+            return false   
+        } catch (error) {
+            throw error
         }
-        return false
+
     }
 
     async editUser(userId: string, editUserInput: EditUserInput): Promise<User> {
-        const editedUser = await this.userRepo.editUser(userId, editUserInput)
-        return editedUser
+        try {
+            const editedUser = await this.userRepo.editUser(userId, editUserInput)
+            return editedUser  
+        } catch (error) {
+            throw error
+        }
+
     }
 
     private async hashPassword(passwordToHash: string){
-        const hashedPassword = await bcrypt.hash(passwordToHash, 10)
-        return hashedPassword;
+        try {
+            const hashedPassword = await bcrypt.hash(passwordToHash, 10)
+            return hashedPassword;
+        } catch (error) {
+            throw error
+        }
+
 }
 }
