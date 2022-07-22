@@ -1,7 +1,7 @@
 import { IUser, userModel } from "./user.model"
 import { CreateUserInput, EditUserInput, User } from "./user.types"
 import bycrypt from "bcrypt"
-import { AlreadyExistsError, NotFoundError } from "../../shared/errors"
+import { AlreadyExistsError, DoesNotExistsError, NotFoundError } from "../../shared/errors"
 
 export class UserRepository {
 
@@ -45,14 +45,18 @@ export class UserRepository {
     }
 
     async getUserByEmail(email: string): Promise<User> {
-        const userByEmail = await userModel.findOne({email: email})
-        if(!userByEmail) {
-            throw new Error(`User with email ${email} doesn't exists`)
+        try {
+            const userByEmail = await userModel.findOne({email: email})
+            if(!userByEmail) {
+                throw new DoesNotExistsError(`User with email ${email} doesn't exists`)
+            }
+    
+            const appUser = this.mapDBUserToAppUser(userByEmail)
+            return appUser
+        } catch (error) {
+            throw error
         }
 
-        const appUser = this.mapDBUserToAppUser(userByEmail)
-
-        return appUser
     }
 
     async getUserById(id: string): Promise<User> {

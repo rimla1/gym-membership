@@ -20,7 +20,9 @@ export class UserService implements IUserService {
 
      async getUserByEmail(email: string): Promise<User> {
         try {
+            console.log("Im sending this e-mail to user repository", email)
             const user = await this.userRepo.getUserByEmail(email)
+            console.log("I received the user and expected value is null", user)
             return user  
         } catch (error) {
             throw error

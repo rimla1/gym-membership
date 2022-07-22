@@ -25,13 +25,10 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
     return res.status(500).json({message: "Something went wrong"});
   })
 
-// mongoose.connect(MONGODB_URI).then(() => {
-//     console.log("Connected to the db")
-//     app.listen(PORT, () => {
-//         console.log(`Up and running on port ${PORT}`)
-//     })
-// })
-
-app.listen(PORT, () => {
-    console.log(`Up and running on port ${PORT}`)
+mongoose.connect(MONGODB_URI).then(() => {
+    console.log("Connected to the db")
+    app.listen(PORT, () => {
+        console.log(`Up and running on port ${PORT}`)
+    })
 })
+

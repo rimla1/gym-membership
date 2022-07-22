@@ -16,12 +16,14 @@ export class AuthService implements IAuthService{
     }
 
     async login(loginInput: LoginRequest): Promise<LoginResponse | ErrorNotFound>{
-        const user = await this.userService.getUserByEmail(loginInput.email)
+        try {
+            const user = await this.userService.getUserByEmail(loginInput.email)
 
-        // if(hash(loginInput.password) === user?.password) {
-        //    jwt.sign()
-        // }
-        console.log("This is from auth.service.ts", user)
+            // if(hash(loginInput.password) === user?.password) {
+            //    jwt.sign()
+            // }
+
+
         const errorNotFound: ErrorNotFound = {
             message: "User with this email not found"
         }
@@ -33,5 +35,9 @@ export class AuthService implements IAuthService{
             token: "dkfoadksfo4fko4",
             user
         }
+        } catch (error) {
+            throw error
+        }
+
     }
 }

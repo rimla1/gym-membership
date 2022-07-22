@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express"
-import { DoesNotExistsError, UnexpectedError, ValidationError } from "../../shared/errors"
+import { ValidationError } from "../../shared/errors"
 import { UserRepository } from "./user.repository"
 import { UserService } from "./user.service"
 import { CreateUserInput, EditUserInput } from "./user.types"
@@ -59,22 +59,18 @@ export const createUser = async (req: Request, res: Response, next: NextFunction
 
 export const editUser = async(req: Request, res: Response, next: NextFunction) => {
     const {name, age, password,  gender} = req.body
-
     const editUserInput: EditUserInput = {
         name,
         age,
         password,
         gender
     }
-
     const userId = req.params.userId
 
     try {
-
     const editUserInputValidated = editUserValidationInput.validate(editUserInput, {abortEarly: false})
 
     if(editUserInputValidated.error){
-        console.log("Hello from here!")
         throw new ValidationError(editUserInputValidated.error?.details)
     }
         const editedUser = await userService.editUser(userId, editUserInput)
