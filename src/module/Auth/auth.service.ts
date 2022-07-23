@@ -1,9 +1,10 @@
+import { hash } from "bcrypt";
 import { CustomError, ErrorNotFound } from "../../shared/types";
 import { UserService } from "../User/user.service";
 import { LoginRequest, LoginResponse } from "./auth.types";
 
 interface IAuthService{
-    login(loginInput: LoginRequest): Promise<LoginResponse | ErrorNotFound>
+    login(loginInput: LoginRequest): Promise<LoginResponse>
 }
 
 export class AuthService implements IAuthService{
@@ -14,19 +15,22 @@ export class AuthService implements IAuthService{
         this.userService = userService
     }
 
-    async login(loginInput: LoginRequest): Promise<LoginResponse | ErrorNotFound>{
-        const user = await this.userService.getUserByEmail(loginInput.email)
-        console.log("This is from auth.service.ts", user)
-        const errorNotFound: ErrorNotFound = {
-            message: "User with this email not found"
-        }
+    async login(loginInput: LoginRequest): Promise<LoginResponse>{
+        try {
+            const user = await this.userService.getUserByEmail(loginInput.email)
 
-        if(!user){
-            return errorNotFound
-        }
+            // if(hash(loginInput.password) === user?.password) {
+            //    jwt.sign()
+            // }
+
+
         return {
             token: "dkfoadksfo4fko4",
             user
         }
+        } catch (error) {
+            throw error
+        }
+
     }
 }

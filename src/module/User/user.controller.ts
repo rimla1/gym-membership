@@ -1,20 +1,27 @@
 import { NextFunction, Request, Response } from "express"
+import { ValidationError } from "../../shared/errors"
 import { UserRepository } from "./user.repository"
 import { UserService } from "./user.service"
 import { CreateUserInput, EditUserInput } from "./user.types"
 import { createUserInputValidationSchema, editUserValidationInput } from "./user.validation"
 
+
 const userRepo = new UserRepository()
 const userService = new UserService(userRepo)
 
 
-export const getUsers = async (req: Request, res: Response) => {
-    const listOfAllUsers = await userService.getUsers()
-    if(listOfAllUsers.length === 0){
-        return res.json({message: "No users created yet!"})
+
+export const getUsers = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const users = await userService.getUsers()
+        if(users.length === 0){
+            return res.json({message: "No users created yet!"})
+        }
+        return res.json(users)
+    } catch (error) {
+        return next(error)
     }
-    console.log(listOfAllUsers.length)
-    return res.json(listOfAllUsers)
+
 }
 
 export const getUser = async (req: Request, res: Response, next: NextFunction) => {
@@ -37,14 +44,11 @@ export const createUser = async (req: Request, res: Response, next: NextFunction
         email,
         gender
     }
-
-    const createUserInputValidated = createUserInputValidationSchema.validate(createUserInput, {abortEarly: false})
-    
-    if(createUserInputValidated.error) {
-        return res.status(401).json({errors: createUserInputValidated.error?.details})
-    }
-
     try {
+    const createUserInputValidated = createUserInputValidationSchema.validate(createUserInput, {abortEarly: false})
+    if(createUserInputValidated.error) {
+        throw new ValidationError(createUserInputValidated.error?.details)
+    }
         const user = await userService.createUser(createUserInput)
         return res.status(200).json(user)
     } catch (error) {
@@ -55,23 +59,20 @@ export const createUser = async (req: Request, res: Response, next: NextFunction
 
 export const editUser = async(req: Request, res: Response, next: NextFunction) => {
     const {name, age, password,  gender} = req.body
-
     const editUserInput: EditUserInput = {
         name,
         age,
         password,
         gender
     }
-
     const userId = req.params.userId
 
+    try {
     const editUserInputValidated = editUserValidationInput.validate(editUserInput, {abortEarly: false})
 
     if(editUserInputValidated.error){
-        return res.status(401).json({errors: editUserInputValidated.error?.details})
+        throw new ValidationError(editUserInputValidated.error?.details)
     }
-
-    try {
         const editedUser = await userService.editUser(userId, editUserInput)
         return res.json(editedUser)
     } catch (error) {

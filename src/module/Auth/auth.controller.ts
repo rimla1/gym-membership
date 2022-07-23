@@ -1,4 +1,5 @@
-import {Request, Response} from "express";
+import {NextFunction, Request, Response} from "express";
+import { ValidationError } from "../../shared/errors";
 import { UserRepository } from "../User/user.repository";
 import { UserService } from "../User/user.service";
 import { AuthService } from "./auth.service";
@@ -9,7 +10,7 @@ const userRepostiory = new UserRepository()
 const userService = new UserService(userRepostiory)
 const authService = new AuthService(userService)
 
-export const loginUser = async (req: Request, res: Response) => {
+export const loginUser = async (req: Request, res: Response, next: NextFunction) => {
     const {email, password} = req.body
 
     const loginInput: LoginRequest = {
@@ -17,15 +18,20 @@ export const loginUser = async (req: Request, res: Response) => {
         password
     }
 
-    const loginUserValidated = loginUserInputValidation.validate(loginInput, {abortEarly: false})
+    try {
+        const loginUserValidated = loginUserInputValidation.validate(loginInput, {abortEarly: false})
 
-    if(loginUserValidated.error){
-            return res.status(401).json({errors: loginUserValidated.error?.details})
+        if(loginUserValidated.error){
+            throw new ValidationError(loginUserValidated.error?.details)
+        }
+    
+        const loginResult = await authService.login(loginInput)
+    
+        return res.json(loginResult)
+    } catch (error) {
+        return next(error)
     }
 
-    const loginResult = await authService.login(loginInput)
-    console.log("this is from auth.controller.ts",loginResult)
 
-    return res.json(loginResult)
 }
 
