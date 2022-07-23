@@ -50,7 +50,6 @@ export class UserRepository {
             if(!userByEmail) {
                 throw new DoesNotExistsError(`User with email ${email} doesn't exists`)
             }
-    
             const appUser = this.mapDBUserToAppUser(userByEmail)
             return appUser
         } catch (error) {
@@ -60,14 +59,19 @@ export class UserRepository {
     }
 
     async getUserById(id: string): Promise<User> {
-        const userById = await userModel.findById(id)
-        if(!userById) {
-                throw new Error(`User with id ${id} doesn't exists`)
+        try {
+            const userById = await userModel.findById(id)
+            if(!userById) {
+                    throw new NotFoundError(`User with id ${id} doesn't exists`)
+            }
+    
+            const appUser = this.mapDBUserToAppUser(userById)
+    
+            return appUser
+        } catch (error) {
+            throw error
         }
 
-        const appUser = this.mapDBUserToAppUser(userById)
-
-        return appUser
     }
 
  
@@ -77,14 +81,14 @@ export class UserRepository {
         const successfullEditedUser = await userModel.findOneAndUpdate({_id: userId}, {...editUserInput}, {new: true})
 
         if (!successfullEditedUser) {
-            throw new Error("User not found or update was not sucessfull")
+            throw new NotFoundError("User not found or update was not sucessfull")
         }
 
         const appUser = this.mapDBUserToAppUser(successfullEditedUser)
 
         return appUser
        } catch (error) {
-            throw new Error("Something went wrong with database (editUser)")
+            throw  error
        }
     }
 
@@ -92,8 +96,8 @@ export class UserRepository {
         try {
         await userModel.findByIdAndDelete(userId)
         return true
-        } catch {
-            throw new Error("Something wrong with the database");
+        } catch (error) {
+            throw error;
         }
     }
 

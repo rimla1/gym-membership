@@ -4,7 +4,7 @@ import { UserService } from "../User/user.service";
 import { LoginRequest, LoginResponse } from "./auth.types";
 
 interface IAuthService{
-    login(loginInput: LoginRequest): Promise<LoginResponse | ErrorNotFound>
+    login(loginInput: LoginRequest): Promise<LoginResponse>
 }
 
 export class AuthService implements IAuthService{
@@ -15,7 +15,7 @@ export class AuthService implements IAuthService{
         this.userService = userService
     }
 
-    async login(loginInput: LoginRequest): Promise<LoginResponse | ErrorNotFound>{
+    async login(loginInput: LoginRequest): Promise<LoginResponse>{
         try {
             const user = await this.userService.getUserByEmail(loginInput.email)
 
@@ -24,13 +24,6 @@ export class AuthService implements IAuthService{
             // }
 
 
-        const errorNotFound: ErrorNotFound = {
-            message: "User with this email not found"
-        }
-
-        if(!user){
-            return errorNotFound
-        }
         return {
             token: "dkfoadksfo4fko4",
             user

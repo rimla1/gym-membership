@@ -3,7 +3,7 @@ import { CreateUserInput, EditUserInput, User } from "./user.types"
 import bcrypt from "bcrypt";
 
 interface IUserService {
-    createUser(createUserInput: CreateUserInput): Promise<User | null>
+    createUser(createUserInput: CreateUserInput): Promise<User>
     getUsers(): Promise<User[]>
     getUserById(id: string): Promise<User>
     editUser(userId: string, editUserInput: EditUserInput): Promise<User>
@@ -20,9 +20,7 @@ export class UserService implements IUserService {
 
      async getUserByEmail(email: string): Promise<User> {
         try {
-            console.log("Im sending this e-mail to user repository", email)
             const user = await this.userRepo.getUserByEmail(email)
-            console.log("I received the user and expected value is null", user)
             return user  
         } catch (error) {
             throw error
@@ -49,7 +47,7 @@ export class UserService implements IUserService {
 
     }
 
-     async createUser(createUserInput: CreateUserInput): Promise<User | null> {
+     async createUser(createUserInput: CreateUserInput): Promise<User> {
         try {
             const hashedPassword = await this.hashPassword(createUserInput.password)
             const user = await this.userRepo.createUser({...createUserInput, password: hashedPassword})
