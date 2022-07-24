@@ -27,8 +27,7 @@ export const editUserValidationInput = Joi.object({
     name: Joi.string()
         .alphanum()
         .min(3)
-        .max(30)
-        .required(),
+        .max(30),
     password: Joi.string()
         .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')),
 
@@ -40,8 +39,7 @@ export const editUserValidationInput = Joi.object({
     gender: Joi.string()
         .alphanum()
         .min(3)
-        .max(7)
-        .required(),
+        .max(7),
 })
 
 // DRY (Try to finda solution if is it possible to not repeat similar code 2 times, instead try to extends smaller consts into bigger)
