@@ -1,5 +1,5 @@
-import { hash } from "bcrypt";
-import { CustomError, ErrorNotFound } from "../../shared/types";
+import bcrypt from "bcrypt";
+import { NotFoundError } from "../../shared/errors";
 import { UserService } from "../User/user.service";
 import { LoginRequest, LoginResponse } from "./auth.types";
 
@@ -18,16 +18,14 @@ export class AuthService implements IAuthService{
     async login(loginInput: LoginRequest): Promise<LoginResponse>{
         try {
             const user = await this.userService.getUserByEmail(loginInput.email)
-
-            // if(hash(loginInput.password) === user?.password) {
-            //    jwt.sign()
-            // }
-
-
-        return {
-            token: "dkfoadksfo4fko4",
-            user
-        }
+            const match = await bcrypt.compare(loginInput.password, user.password)
+            if(match){
+                return {
+                    token: "dkfoadksfo4fko4",
+                    user
+                }
+            }
+            throw new NotFoundError("Your password is incorrect please try again!")
         } catch (error) {
             throw error
         }

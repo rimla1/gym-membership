@@ -75,21 +75,23 @@ export class UserService implements IUserService {
 
     async editUser(userId: string, editUserInput: EditUserInput): Promise<User> {
         try {
-            
-            const hashedPassword = await this.hashPassword(editUserInput.password)
-            const editedUser = await this.userRepo.editUser(userId, {...editUserInput, password: hashedPassword})
-            console.log(hashedPassword)
-            console.log(editUserInput.password)
-            const match = await bcrypt.compare(editUserInput.password, editedUser.password)
+            const userFromDB = await this.getUserById(userId)
+            if(editUserInput.password){
+                const match = await bcrypt.compare(editUserInput.password, userFromDB.password)
             if(match){
                 throw new AlreadyExistsError("Password already exist! Please try different password!")
             }
+            const hashedPassword = await this.hashPassword(editUserInput.password)
+            editUserInput.password = hashedPassword 
+            }
+            const editedUser = await this.userRepo.editUser(userId, editUserInput)
             return editedUser  
         } catch (error) {
             throw error
         }
-        // $2b$10$DHq4H7OSTG1U00xB.wpOfe9Y/fSxydx9Iifth07JqozE5ybh..xXq // Current password [random]
-        // $2b$10$cmpiQceepFTGlVrVaJOjw.5G4t4ICW/B5vSXPjaz1gimDqaNOVg9i //New different password from previous [almir1234]
+        // $2b$10$cmpiQceepFTGlVrVaJOjw.5G4t4ICW/B5vSXPjaz1gimDqaNOVg9i // Current password [almir1234]
+        // $2b$10$tWXEbPSS0Xd.A8jVXnpMz.3N44LXGViSKL3f37Csonz8xVpLcdnpa // Updated different password from current password [rimla5]
+        // Password is the same (message from postman) // try with same password [rimla5]
     }
 
     private async hashPassword(passwordToHash: string){

@@ -22,6 +22,7 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
     if(err instanceof AlreadyExistsError || err instanceof ValidationError || err instanceof DoesNotExistsError || err instanceof NotFoundError) {
         return res.status(err.statusCode).json({errors: err.errors})
     } 
+    console.log(err)
     return res.status(500).json({message: "Something went wrong"});
   })
 
