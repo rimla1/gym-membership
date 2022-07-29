@@ -1,10 +1,11 @@
 import {Router} from 'express'
 import { getUsers, createUser, editUser, deleteUser, getUser } from './user.controller';
+import isAuth from "../../shared/is-auth";
 
 export const userRouter = Router();
 
-userRouter.get("/:userId", getUser)
-userRouter.get("/", getUsers)
-userRouter.post("/", createUser)
-userRouter.put("/:userId", editUser)
-userRouter.delete("/:userId", deleteUser)
+userRouter.get("/:userId", isAuth, getUser)
+userRouter.get("/", isAuth,  getUsers)
+userRouter.post("/", isAuth, createUser)
+userRouter.put("/:userId", isAuth, editUser)
+userRouter.delete("/:userId", isAuth, deleteUser)
