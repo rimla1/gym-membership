@@ -9,17 +9,25 @@ const userService = new UserService(userRepository)
 const membershipRepo = new MembershipRepository()
 const membershipService = new MembershipService(userService, membershipRepo)
 
+export const updateMembership = (req: Request, res: Response, next: NextFunction) => {
+    console.log("Get users that membership expired in past 7 days!")
+    res.json({message: "Almir Muminovic 19 [54321], updateMembership"})
+}
 
+export const getExpiredUsersInPastWeek = async (req: Request, res: Response, next: NextFunction) => {
+    console.log("Get users that membership expired in past 7 days!")
+    res.json({message: "Almir Muminovic 19 [54321], getExpiredUsersInP"})
+}
 
-export const getAllExpiredUsers = async () => {
-    // PUT update a membership for a certain user
-
-    // GET all expired users
-    try {
-        const expitedUsers = await userService.getUsers()
-    } catch (error) {
+export const getAllExpiredUsers = async (req: Request, res: Response, next: NextFunction) => {
+    console.log("Get users that membership expired in past 7 days!")
+    res.json({message: "Almir Muminovic 19 [54321, getAllExpiredUsers]"})
+    
+    
+    // try {
+    //     const expitedUsers = await userService.getUsers()
+    // } catch (error) {
         
-    }
-    // GET expited users in past 7 days
+    // }
 
 }

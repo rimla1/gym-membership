@@ -4,7 +4,7 @@ export class MembershipService {
 
     userService: UserService
 
-    constructor(userService: UserService){
+    constructor(userService: UserService, membershipRepository: any){
         this.userService = userService
     }
 
