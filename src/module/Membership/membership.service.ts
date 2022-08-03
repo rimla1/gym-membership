@@ -24,7 +24,7 @@ export class MembershipService implements IMembership {
     async getAllExpiredUsers(){
         try {
             console.log("Before going to Repository, Here in membership.service.ts getAllExpiredUsers")
-            const expiredUsers = this.membershipRepository.getAllExpiredUsers()
+            const expiredUsers = await this.membershipRepository.getAllExpiredUsers()
             console.log("After coming back from Repository, Here in membership.service.ts getAllExpiredUsers")
             console.log(expiredUsers)
             return expiredUsers
@@ -36,17 +36,25 @@ export class MembershipService implements IMembership {
 
     // GET expited users in past 7 days
     async getExpiredUsersInPastWeek(){
-        console.log("Here in membership.service.ts getExpiredUsersInPastWeek")
-        return "Hello world!"
+        try {
+            console.log("Before going to Repository, Here in membership.service.ts getExpiredUsersInPastWeek")
+            const expiredUsers = await this.membershipRepository.getAllExpiredUsersInPastWeek()
+            console.log("After coming back from Repository, Here in membership.service.ts getExpiredUsersInPastWeek")
+            console.log(expiredUsers)
+            return expiredUsers
+        } catch (error) {
+            
+        }
     }
     
     // PUT update a membership for a certain user
     async updateMembership(userId: string){
-        console.log("Ulazim ovde!")
-        // const user = this.userService.getUserById(userId)
         console.log(userId)
-        return userId
-        console.log("Ne stizem ovde")
+        console.log("Before going to Repository, Here in membership.service.ts updateMembership")
+        const membershipStatus = await this.membershipRepository.updateMembership()
+        console.log("After coming back from Repository, Here in membership.service.ts updateMembership")
+        console.log(membershipStatus)
+        return membershipStatus
     }
 
 }

@@ -2,7 +2,7 @@ export class MembershipRepository {
     
     async getAllExpiredUsers(){
         try {
-        return "Hello from MembershipRepository"    
+        return "Hello from MembershipRepository getAllExpiredUsers"    
         } catch (error) {
             console.log(error)
         }
@@ -10,7 +10,7 @@ export class MembershipRepository {
 
     async getAllExpiredUsersInPastWeek(){
         try {
-            
+        return "Hello from MembershipRepository getAllExpiredUsers"
         } catch (error) {
             console.log(error)
         }
@@ -18,7 +18,7 @@ export class MembershipRepository {
 
     async updateMembership(){
         try {
-            
+        return "Hello from MembershipRepository getAllExpiredUsers"    
         } catch (error) {
             console.log(error)
         }
