@@ -1,13 +1,10 @@
 import { NextFunction, Request, Response } from "express"
-import { UserRepository } from "../User/user.repository"
-import { UserService } from "../User/user.service"
 import { MembershipRepository } from "./membership.repository"
 import { MembershipService } from "./membership.service"
 
-const userRepository = new UserRepository()
-const userService = new UserService(userRepository)
+
 const membershipRepository = new MembershipRepository()
-const membershipService = new MembershipService(userService, membershipRepository)
+const membershipService = new MembershipService(membershipRepository)
 
 export const getAllExpiredUsers = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -44,6 +41,20 @@ export const updateMembership = async (req: Request, res: Response, next: NextFu
         console.log("After coming back from Service, Here in membership.controller.ts updateMembership")
         console.log(membershipStatus)
         return res.json(membershipStatus)
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export const createMembership = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const currentDate = new Date()
+        console.log(currentDate)
+        const {userId} = req.params
+        const startsAt = 0
+        const endsAt = 0
+        const membership = await membershipService.createMembership(userId, startsAt, endsAt)
+        return membership
     } catch (error) {
         console.log(error)
     }

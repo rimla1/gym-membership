@@ -12,11 +12,9 @@ interface IMembership {
 
 export class MembershipService implements IMembership {
 
-    userService: UserService
     membershipRepository: MembershipRepository
 
-    constructor(userService: UserService, membershipRepository: any){
-        this.userService = userService
+    constructor( membershipRepository: any){
         this.membershipRepository = membershipRepository
     }
 
@@ -38,10 +36,10 @@ export class MembershipService implements IMembership {
     async getExpiredUsersInPastWeek(){
         try {
             console.log("Before going to Repository, Here in membership.service.ts getExpiredUsersInPastWeek")
-            const expiredUsers = await this.membershipRepository.getAllExpiredUsersInPastWeek()
+            const expiredUsersInPastWeek = await this.membershipRepository.getAllExpiredUsersInPastWeek()
             console.log("After coming back from Repository, Here in membership.service.ts getExpiredUsersInPastWeek")
-            console.log(expiredUsers)
-            return expiredUsers
+            console.log(expiredUsersInPastWeek)
+            return 
         } catch (error) {
             
         }
@@ -55,6 +53,13 @@ export class MembershipService implements IMembership {
         console.log("After coming back from Repository, Here in membership.service.ts updateMembership")
         console.log(membershipStatus)
         return membershipStatus
+    }
+
+    async createMembership(userId: string, startsAt: number, endsAt: number){
+        console.log("Creating membership triggered")
+        const membership = await this.membershipRepository.createMembership(userId, startsAt, endsAt)
+        console.log(userId, startsAt, endsAt)
+        return membership
     }
 
 }

@@ -1,13 +1,17 @@
 import { NextFunction, Request, Response } from "express"
 import { ValidationError } from "../../shared/errors"
+import { MembershipRepository } from "../Membership/membership.repository"
+import { MembershipService } from "../Membership/membership.service"
 import { UserRepository } from "./user.repository"
 import { UserService } from "./user.service"
 import { CreateUserInput, EditUserInput } from "./user.types"
 import { createUserInputValidationSchema, editUserValidationInput } from "./user.validation"
 
+const membershipRepository = new MembershipRepository()
+const membershipService = new MembershipService(membershipRepository)
 
 const userRepo = new UserRepository()
-const userService = new UserService(userRepo)
+const userService = new UserService(userRepo, membershipService)
 
 
 

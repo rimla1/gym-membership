@@ -2,20 +2,20 @@ import { required } from 'joi'
 import mongoose, {Schema, model} from 'mongoose'
 
 export interface IMembership {
-    startMembership: Date
-    endMembership: Date
+    startsAt: number
+    endsAt: number
     userId: mongoose.ObjectId
     _id: mongoose.ObjectId
 }
 
 const membershipSchema = new Schema<IMembership>({
-    startMembership: {
-        type: Date,
+    startsAt: {
+        type: Number,
         required: true,
         default: 0
     },
-    endMembership: {
-        type: Date,
+    endsAt: {
+        type: Number,
         required: true,
         default: 0
     },
