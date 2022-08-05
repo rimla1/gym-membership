@@ -3,6 +3,7 @@ import { IUser, userModel } from "./../User/user.model"
 
 export class MembershipRepository {
     
+
     async getAllExpiredUsers(){
         try {
         const currentDate = new Date() // 2022-08-04T14:43:19.553Z
@@ -21,15 +22,18 @@ export class MembershipRepository {
 
     async getAllExpiredUsersInPastWeek(){
         try {
-        return "Hello from MembershipRepository getAllExpiredUsersInPastWeek"
+        const currentDate = new Date()
+        const expiredMembershipsInPastWeek = await membershipModel.find().populate({path: 'userId', select: '_id, name', match: {name: "test2"}})
+        return expiredMembershipsInPastWeek
         } catch (error) {
             console.log(error)
         }
     }
 
-    async updateMembership(){
+    async updateMembership(userId: string){
         try {
-        return "Hello from MembershipRepository updateMembership"    
+        const membershipToUpdate = await membershipModel.find({userId: userId}).populate({path: 'userId', select: '_id, name'})
+        return membershipToUpdate 
         } catch (error) {
             console.log(error)
         }
