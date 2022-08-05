@@ -55,7 +55,7 @@ export class UserService implements IUserService {
         try {
             const hashedPassword = await this.hashPassword(createUserInput.password)
             const user = await this.userRepo.createUser({...createUserInput, password: hashedPassword})
-            await this.membershipService.createMembership(user.id, 0, 0)
+            await this.membershipService.createMembership(user.id)
             return user
         } catch (error) {
             throw error

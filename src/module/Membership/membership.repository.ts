@@ -5,10 +5,15 @@ export class MembershipRepository {
     
     async getAllExpiredUsers(){
         try {
-        const currentDate = new Date()
-        const expiredMemberships = await userModel.find().populate({path: "memberships", match: {startsAt: {$lte: currentDate}}});
+        const currentDate = new Date() // 2022-08-04T14:43:19.553Z
+        // const expiredMemberships = await membershipModel.find({userId: "62ebd2b862498b12687bba88"}) - Ovo hoce
+        // const expiredMemberships = await membershipModel.find({endsAt: currentDate })
+        // const expiredMemberships = await membershipModel.find({endsAt: undefined }) - ovo hoce
+        // const expiredMemberships = await membershipModel.find({endsAt < currentDate }) - ovo nece!? zbog toga sto endsAt moze da bude undefined
+        const expiredMemberships = await membershipModel.find().populate({path: 'userId', select: '_id, name', match: {name: "test2"}}); // - vraca sve ali ulazi u check i ostale vraca ali je id uklonjen
+        // const expiredMemberships = await membershipModel.find({name: "test2"}).populate({path: 'userId', select: '_id, name'}); // Populate ne postoji u bazi zbog toga ne moze da nadje name?
         console.log(expiredMemberships)
-        return "Hello from MembershipRepository getAllExpiredUsers"    
+        return expiredMemberships  
         } catch (error) {
             console.log(error)
         }
@@ -30,9 +35,9 @@ export class MembershipRepository {
         }
     }
 
-    async createMembership(userId: string, startsAt: number, endsAt: number){
+    async createMembership(userId: string){
         try {
-            const membershipToSave = new membershipModel({userId, undefined})
+            const membershipToSave = new membershipModel({userId})
             const savedMembership = await membershipToSave.save()
             return savedMembership
         } catch (error) {

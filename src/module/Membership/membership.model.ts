@@ -1,26 +1,23 @@
-import { required } from 'joi'
 import mongoose, {Schema, model} from 'mongoose'
 
 export interface IMembership {
-    startsAt: number
-    endsAt: number
+    startsAt: Date
+    endsAt: Date
     userId: mongoose.ObjectId
     _id: mongoose.ObjectId
 }
 
 const membershipSchema = new Schema<IMembership>({
     startsAt: {
-        type: Number,
-        required: true,
-        default: 0
+        type: Date,
+        default: null
     },
     endsAt: {
-        type: Number,
-        required: true,
-        default: 0
+        type: Date,
+        default: null
     },
     userId: {
-        type: mongoose.Schema.Types.ObjectId, ref: "User"
+        type: mongoose.Schema.Types.ObjectId, ref: "user"
     }
 })
 

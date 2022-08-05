@@ -21,13 +21,10 @@ export class MembershipService implements IMembership {
     // GET all expired users
     async getAllExpiredUsers(){
         try {
-            console.log("Before going to Repository, Here in membership.service.ts getAllExpiredUsers")
             const expiredUsers = await this.membershipRepository.getAllExpiredUsers()
-            console.log("After coming back from Repository, Here in membership.service.ts getAllExpiredUsers")
-            console.log(expiredUsers)
             return expiredUsers
         } catch (error) {
-            
+            console.log(error)
         }
 
     }
@@ -47,18 +44,14 @@ export class MembershipService implements IMembership {
     
     // PUT update a membership for a certain user
     async updateMembership(userId: string){
-        console.log(userId)
-        console.log("Before going to Repository, Here in membership.service.ts updateMembership")
+        console.log(userId, "membership service")
         const membershipStatus = await this.membershipRepository.updateMembership()
-        console.log("After coming back from Repository, Here in membership.service.ts updateMembership")
-        console.log(membershipStatus)
         return membershipStatus
     }
 
-    async createMembership(userId: string, startsAt: number, endsAt: number){
+    async createMembership(userId: string){
         console.log("Creating membership triggered")
-        const membership = await this.membershipRepository.createMembership(userId, startsAt, endsAt)
-        console.log(userId, startsAt, endsAt)
+        const membership = await this.membershipRepository.createMembership(userId)
         return membership
     }
 
