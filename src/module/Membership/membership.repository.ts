@@ -20,8 +20,9 @@ export class MembershipRepository {
         const currentDate = new Date()
         const currentDateMinusSevenDays = new Date();
         currentDateMinusSevenDays.setDate(currentDateMinusSevenDays.getDate() - 7);
-        // db.collection.find({ endsAt : { $gt:currentDate - '1m', $lt:currentDate}})
-        const expiredMembershipsInPastWeek = await membershipModel.find({ endsAt : {   $gt:("2022-07-31")}}).populate({path: 'userId', select: '_id, name'})
+
+        // db.collection.find({ DateAdded : { $gt:ISODate('2020-09-18T21:07:42.313+00:00'), $lt:ISODate('2020-09-19T21:08:42.313+00:00')}})
+        const expiredMembershipsInPastWeek = await membershipModel.find({ endsAt : {   $gt: currentDateMinusSevenDays , $lt: currentDate }}).populate({path: 'userId', select: '_id, name'})
         return expiredMembershipsInPastWeek
         } catch (error) {
             console.log(error)
