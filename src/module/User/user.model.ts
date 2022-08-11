@@ -9,6 +9,8 @@ export interface IUser {
     _id: mongoose.ObjectId
   }
 
+
+  
 const userSchema = new Schema<IUser>({
     name: {
         type: String,

@@ -3,9 +3,9 @@ import { MembershipRepository } from "./membership.repository";
 
 interface IMembership {
     // Promise<Users[]>
-    getAllExpiredUsers(): any
+    getUsersWithExpiredMembership(): any
     // Promise<Users[]>
-    getExpiredUsersInPastWeek(): any
+    getUsersWithExpiredMembershipInPastWeek(): any
     // Promise<User>
     updateMembership(userId: string): any
 }
@@ -19,9 +19,9 @@ export class MembershipService implements IMembership {
     }
 
     // GET all expired users
-    async getAllExpiredUsers(){
+    async getUsersWithExpiredMembership(){
         try {
-            const expiredUsers = await this.membershipRepository.getAllExpiredUsers()
+            const expiredUsers = await this.membershipRepository.getUsersWithExpiredMembership()
             return expiredUsers
         } catch (error) {
             console.log(error)
@@ -30,10 +30,10 @@ export class MembershipService implements IMembership {
     }
 
     // GET expited users in past 7 days
-    async getExpiredUsersInPastWeek(){
+    async getUsersWithExpiredMembershipInPastWeek(){
         try {
             console.log("Before going to Repository, Here in membership.service.ts getExpiredUsersInPastWeek")
-            const expiredUsersInPastWeek = await this.membershipRepository.getAllExpiredUsersInPastWeek()
+            const expiredUsersInPastWeek = await this.membershipRepository.getUsersWithExpiredMembershipInPastWeek()
             console.log("After coming back from Repository, Here in membership.service.ts getExpiredUsersInPastWeek")
             console.log(expiredUsersInPastWeek)
             return expiredUsersInPastWeek

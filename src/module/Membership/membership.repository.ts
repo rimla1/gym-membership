@@ -4,15 +4,10 @@ import { IUser, userModel } from "./../User/user.model"
 export class MembershipRepository {
     
 
-    async getAllExpiredUsers(){
+    async getUsersWithExpiredMembership(){
         try {
-        const currentDate = new Date() // 2022-08-04T14:43:19.553Z
-        // const expiredMemberships = await membershipModel.find({userId: "62ebd2b862498b12687bba88"}) - Ovo hoce
-        // const expiredMemberships = await membershipModel.find({endsAt: currentDate })
-        // const expiredMemberships = await membershipModel.find({endsAt: undefined }) - ovo hoce
-        // const expiredMemberships = await membershipModel.find({endsAt < currentDate }) - ovo nece!? zbog toga sto endsAt moze da bude undefined
-        const expiredMemberships = await membershipModel.find().populate({path: 'userId', select: '_id, name', match: {name: "test2"}}); // - vraca sve ali ulazi u check i ostale vraca ali je id uklonjen
-        // const expiredMemberships = await membershipModel.find({name: "test2"}).populate({path: 'userId', select: '_id, name'}); // Populate ne postoji u bazi zbog toga ne moze da nadje name?
+        const currentDate = new Date()
+        const expiredMemberships = await membershipModel.find({ endsAt: { $lt: currentDate } })
         console.log(expiredMemberships)
         return expiredMemberships  
         } catch (error) {
@@ -20,10 +15,13 @@ export class MembershipRepository {
         }
     }
 
-    async getAllExpiredUsersInPastWeek(){
+    async getUsersWithExpiredMembershipInPastWeek(){
         try {
         const currentDate = new Date()
-        const expiredMembershipsInPastWeek = await membershipModel.find().populate({path: 'userId', select: '_id, name', match: {name: "test2"}})
+        const currentDateMinusSevenDays = new Date();
+        currentDateMinusSevenDays.setDate(currentDateMinusSevenDays.getDate() - 7);
+        // db.collection.find({ endsAt : { $gt:currentDate - '1m', $lt:currentDate}})
+        const expiredMembershipsInPastWeek = await membershipModel.find({ endsAt : {   $gt:("2022-07-31")}}).populate({path: 'userId', select: '_id, name'})
         return expiredMembershipsInPastWeek
         } catch (error) {
             console.log(error)

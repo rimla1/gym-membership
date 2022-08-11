@@ -6,9 +6,9 @@ import { MembershipService } from "./membership.service"
 const membershipRepository = new MembershipRepository()
 const membershipService = new MembershipService(membershipRepository)
 
-export const getAllExpiredUsers = async (req: Request, res: Response, next: NextFunction) => {
+export const getUsersWithExpiredMembership = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const expiredUsers = await membershipService.getAllExpiredUsers()
+        const expiredUsers = await membershipService.getUsersWithExpiredMembership()
         return res.json(expiredUsers)
     } catch (error) {
         console.log(error)
@@ -16,10 +16,10 @@ export const getAllExpiredUsers = async (req: Request, res: Response, next: Next
 
 }
 
-export const getExpiredUsersInPastWeek = async (req: Request, res: Response, next: NextFunction) => {
+export const getUsersWithExpiredMembershipInPastWeek = async (req: Request, res: Response, next: NextFunction) => {
     try {
         console.log("Before going to Service, Here in membership.controller.ts getExpiredUsersInPastWeek")
-        const expiredUsersInPastWeek = await membershipService.getExpiredUsersInPastWeek()
+        const expiredUsersInPastWeek = await membershipService.getUsersWithExpiredMembershipInPastWeek()
         console.log("After coming back from Service, Here in membership.controller.ts getExpiredUsersInPastWeek")
         console.log(expiredUsersInPastWeek)
         return res.json(expiredUsersInPastWeek)
@@ -42,6 +42,7 @@ export const createMembership = async (req: Request, res: Response, next: NextFu
     try {
         const {userId} = req.params
         const membership = await membershipService.createMembership(userId)
+        console.log(membership)
         return membership
     } catch (error) {
         console.log(error)
