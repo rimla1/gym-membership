@@ -18,10 +18,8 @@ export const getUsersWithExpiredMembership = async (req: Request, res: Response,
 
 export const getUsersWithExpiredMembershipInPastWeek = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        console.log("Before going to Service, Here in membership.controller.ts getExpiredUsersInPastWeek")
+
         const expiredUsersInPastWeek = await membershipService.getUsersWithExpiredMembershipInPastWeek()
-        console.log("After coming back from Service, Here in membership.controller.ts getExpiredUsersInPastWeek")
-        console.log(expiredUsersInPastWeek)
         return res.json(expiredUsersInPastWeek)
     } catch (error) {
         console.log(error)
@@ -31,7 +29,9 @@ export const getUsersWithExpiredMembershipInPastWeek = async (req: Request, res:
 export const updateMembership = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const {userId} = req.params
-        const membershipStatus = await membershipService.updateMembership(userId) 
+        console.log(" **1** Controller(Before going to service): No access to MembershipStatus")
+        const membershipStatus = await membershipService.updateMembership(userId)
+        console.log(" **6** Controller(After coming from service): Have access to MembershipStatus")
         return res.json(membershipStatus)
     } catch (error) {
         console.log(error)
@@ -42,8 +42,7 @@ export const createMembership = async (req: Request, res: Response, next: NextFu
     try {
         const {userId} = req.params
         const membership = await membershipService.createMembership(userId)
-        console.log(membership)
-        return membership
+        return res.json(membership)
     } catch (error) {
         console.log(error)
     }

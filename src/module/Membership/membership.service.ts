@@ -1,12 +1,14 @@
 import { UserService } from "../User/user.service";
 import { MembershipRepository } from "./membership.repository";
+import { MembershipResult } from "./membership.types";
+
 
 interface IMembership {
-    // Promise<Users[]>
-    getUsersWithExpiredMembership(): any
-    // Promise<Users[]>
-    getUsersWithExpiredMembershipInPastWeek(): any
-    // Promise<User>
+    // Promise<MembershipResult[]>
+    getUsersWithExpiredMembership(): Promise<MembershipResult[]>
+    // Promise<MembershipResult[]>
+    getUsersWithExpiredMembershipInPastWeek(): Promise<MembershipResult[]>
+    // Promise<MembershipResult>
     updateMembership(userId: string): any
 }
 
@@ -19,34 +21,43 @@ export class MembershipService implements IMembership {
     }
 
     // GET all expired users
-    async getUsersWithExpiredMembership(){
+    async getUsersWithExpiredMembership(): Promise<MembershipResult[]>{
         try {
             const expiredUsers = await this.membershipRepository.getUsersWithExpiredMembership()
             return expiredUsers
         } catch (error) {
             console.log(error)
+            throw 'abc promeni me';
         }
 
     }
 
     // GET expited users in past 7 days
-    async getUsersWithExpiredMembershipInPastWeek(){
+    async getUsersWithExpiredMembershipInPastWeek(): Promise<MembershipResult[]>{
         try {
-            console.log("Before going to Repository, Here in membership.service.ts getExpiredUsersInPastWeek")
             const expiredUsersInPastWeek = await this.membershipRepository.getUsersWithExpiredMembershipInPastWeek()
-            console.log("After coming back from Repository, Here in membership.service.ts getExpiredUsersInPastWeek")
-            console.log(expiredUsersInPastWeek)
             return expiredUsersInPastWeek
         } catch (error) {
-            
+            throw 'abc promeni me';
         }
     }
     
     // PUT update a membership for a certain user
     async updateMembership(userId: string){
-        console.log(userId, "membership service")
-        const membershipStatus = await this.membershipRepository.updateMembership(userId)
-        return membershipStatus
+        try {
+            const currentDate = new Date()
+            console.log(currentDate)
+            console.log(" **2** Service(Before going to repository): No access to MembershipStatus")
+            const membershipStatus = await this.membershipRepository.updateMembership(userId)
+            // Need to receive startsAt and endsAt from database
+                // if (statsAt === null || endMembership < currentDate){}
+                // don't update startsAt, just update endMembership + 30
+            console.log(" **5** Service(After coming from repository): Have access to MembershipStatus")
+            return membershipStatus
+        } catch (error) {
+            throw 'abc promeni me';
+        }
+
     }
 
     async createMembership(userId: string){

@@ -1,38 +1,63 @@
 import { IMembership, membershipModel } from "./membership.model"
 import { IUser, userModel } from "./../User/user.model"
+import { NotFoundError, UnexpectedError } from "../../shared/errors"
+import { MembershipResult } from "./membership.types"
 
 export class MembershipRepository {
     
 
-    async getUsersWithExpiredMembership(){
+    async getUsersWithExpiredMembership(): Promise<MembershipResult[]>{
         try {
         const currentDate = new Date()
         const expiredMemberships = await membershipModel.find({ endsAt: { $lt: currentDate } })
-        console.log(expiredMemberships)
-        return expiredMemberships  
+        if(!expiredMemberships){
+            throw new NotFoundError("Memberships Not Found")
+        }
+        
+        const membershipResult: MembershipResult[] = [];
+
+        expiredMemberships.forEach(membership => {
+            const mappedMembership = this.mapDBMembershipToAppMembership(membership)
+            membershipResult.push(mappedMembership)
+        })
+
+        return membershipResult
         } catch (error) {
             console.log(error)
+            throw new UnexpectedError("Something went wrong with promenicu ovo posle")
         }
     }
 
-    async getUsersWithExpiredMembershipInPastWeek(){
+    async getUsersWithExpiredMembershipInPastWeek():  Promise<MembershipResult[]>{
         try {
         const currentDate = new Date()
         const currentDateMinusSevenDays = new Date();
         currentDateMinusSevenDays.setDate(currentDateMinusSevenDays.getDate() - 7);
-
-        // db.collection.find({ DateAdded : { $gt:ISODate('2020-09-18T21:07:42.313+00:00'), $lt:ISODate('2020-09-19T21:08:42.313+00:00')}})
         const expiredMembershipsInPastWeek = await membershipModel.find({ endsAt : {   $gt: currentDateMinusSevenDays , $lt: currentDate }}).populate({path: 'userId', select: '_id, name'})
-        return expiredMembershipsInPastWeek
+        if(!expiredMembershipsInPastWeek){
+            throw new NotFoundError("Memberships Not Found")
+        }
+
+        const membershipResult: MembershipResult[] = [];
+
+        expiredMembershipsInPastWeek.forEach(membership => {
+            const mappedMembership = this.mapDBMembershipToAppMembership(membership)
+            membershipResult.push(mappedMembership)
+        })
+
+        return membershipResult
         } catch (error) {
-            console.log(error)
+            throw new UnexpectedError("Something went wrong with promenicu ovo posle")
         }
     }
 
     async updateMembership(userId: string){
         try {
+        console.log(" **3** Repository(Before going to database): No access to MembershipStatus")
         const membershipToUpdate = await membershipModel.find({userId: userId}).populate({path: 'userId', select: '_id, name'})
-        return membershipToUpdate 
+        console.log(" **4** Repository(After coming from database): Have access to MembershipStatus")
+        // const appMembership = this.mapDBMembershipToAppMembership(membershipToUpdate)
+        return membershipToUpdate
         } catch (error) {
             console.log(error)
         }
@@ -47,4 +72,15 @@ export class MembershipRepository {
             console.log(error)
         }
     }
+
+    private mapDBMembershipToAppMembership(membershipFromDB: IMembership): MembershipResult {
+        const membership: MembershipResult = {
+            startsAt: membershipFromDB.startsAt,
+            endsAt: membershipFromDB.endsAt,
+            userId: membershipFromDB.userId.toString(),
+            id: membershipFromDB._id.toString()
+        }
+        return membership
+    }
+
 }
