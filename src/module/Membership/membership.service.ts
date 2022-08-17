@@ -9,7 +9,7 @@ interface IMembership {
     // Promise<MembershipResult[]>
     getUsersWithExpiredMembershipInPastWeek(): Promise<MembershipResult[]>
     // Promise<MembershipResult>
-    updateMembership(userId: string): any
+    updateMembership(userId: string): Promise<MembershipResult>
 }
 
 export class MembershipService implements IMembership {
@@ -43,22 +43,40 @@ export class MembershipService implements IMembership {
     }
     
     // PUT update a membership for a certain user
-    async updateMembership(userId: string){
+    // TODO - 1. Extend membership mozda noov ime
+    async updateMembership(userId: string): Promise<MembershipResult>{
         try {
+            let startsAt: Date;
+            let endsAt: Date;
+            let updatedMembership: Promise<MembershipResult>;
             const currentDate = new Date()
-            console.log(currentDate)
-            console.log(" **2** Service(Before going to repository): No access to MembershipStatus")
-            const membershipStatus = await this.membershipRepository.updateMembership(userId)
-            // Need to receive startsAt and endsAt from database
-                // if (statsAt === null || endMembership < currentDate){}
-                // don't update startsAt, just update endMembership + 30
-            console.log(" **5** Service(After coming from repository): Have access to MembershipStatus")
-            return membershipStatus
+            const membership = await this.membershipRepository.findMembership(userId)
+            const isMembershipExpired = membership.startsAt === null || membership.endsAt < currentDate
+            if(isMembershipExpired){
+                startsAt = currentDate
+                endsAt = new Date();
+                endsAt.setMonth(endsAt.getMonth() + 1);
+                updatedMembership = this.membershipRepository.findAndUpdateMembership(userId, startsAt, endsAt)
+                return updatedMembership
+            }
+             startsAt = membership.startsAt
+             endsAt = new Date(membership.endsAt)
+             endsAt.setMonth(endsAt.getMonth() + 1);
+             updatedMembership = this.membershipRepository.findAndUpdateMembership(userId, startsAt, endsAt)
+            return updatedMembership
         } catch (error) {
             throw 'abc promeni me';
         }
-
     }
+
+    // private async extendUnexpiredMembership(membership: MembershipResult, userId: string) {
+    //     const startsAt = membership.startsAt
+    //     const endsAt = new Date(membership.endsAt)
+    //     endsAt.setMonth(endsAt.getMonth() + 1);
+    //     const updatedMembership = this.membershipRepository.findAndUpdateMembership(userId, startsAt, endsAt)
+    //     return updatedMembership
+    // }
+
 
     async createMembership(userId: string){
         console.log("Creating membership triggered")

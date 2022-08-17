@@ -8,8 +8,8 @@ export interface IMembership {
     _id: mongoose.ObjectId
 }
 
-const defaultDateForStartsAt = new Date("2022-04-06")
-const defaultDateForEndsAt = new Date("2022-08-06")
+const defaultDateForStartsAt = new Date("2019-08-20")
+const defaultDateForEndsAt = new Date("2022-08-20")
 
 const membershipSchema = new Schema<IMembership>({
     startsAt: {
