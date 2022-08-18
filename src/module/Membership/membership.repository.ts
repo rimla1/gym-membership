@@ -47,7 +47,7 @@ export class MembershipRepository {
         }
     }
 
-    // Rename to FINDMEMBERSHIP
+
     async findMembership(userId: string): Promise<MembershipResult>{
         try {
         const DBmembership = await membershipModel.findOne({userId: userId}).populate({path: 'userId', select: '_id, name'})

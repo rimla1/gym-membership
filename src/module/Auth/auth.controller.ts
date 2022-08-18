@@ -24,19 +24,13 @@ export const loginUser = async (req: Request, res: Response, next: NextFunction)
 
     try {
         const loginUserValidated = loginUserInputValidation.validate(loginInput, {abortEarly: false})
-
         if(loginUserValidated.error){
             throw new ValidationError(loginUserValidated.error?.details)
         }
-        
-        console.log("auth controller, before going to service")
         const loginResult = await authService.login(loginInput)
-        console.log("auth controller, after coming back from service")
         return res.json(loginResult)
     } catch (error) {
         return next(error)
     }
-
-
 }
 

@@ -1,4 +1,3 @@
-import { UserService } from "../User/user.service";
 import { MembershipRepository } from "./membership.repository";
 import { MembershipResult } from "./membership.types";
 
@@ -36,8 +35,7 @@ export class MembershipService implements IMembership {
         }
     }
     
-    // PUT update a membership for a certain user
-    // TODO - 1. Extend membership mozda noov ime
+
     async extendMembership(userId: string): Promise<MembershipResult>{
         try {
             let updatedMembership: Promise<MembershipResult>;
@@ -74,16 +72,12 @@ export class MembershipService implements IMembership {
 
     
 
-
     async createMembership(userId: string){
         try {
-            console.log("Creating membership triggered")
             const membership = await this.membershipRepository.createMembership(userId)
             return membership
         } catch (error) {
             throw error
         }
-
     }
-
 }

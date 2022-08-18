@@ -1,5 +1,4 @@
 import { Router } from "express";
-import isAuth from "../../shared/is-auth";
 import { loginUser } from "./auth.controller";
 
 
