@@ -2,6 +2,7 @@ import { UserRepository } from "./user.repository"
 import { CreateUserInput, EditUserInput, User } from "./user.types"
 import bcrypt from "bcrypt";
 import { AlreadyExistsError } from "../../shared/errors";
+import { MembershipService } from "../Membership/membership.service";
 
 interface IUserService {
     createUser(createUserInput: CreateUserInput): Promise<User>
@@ -14,9 +15,11 @@ interface IUserService {
 
 export class UserService implements IUserService {
     private userRepo: UserRepository
+    private membershipService: MembershipService
 
-    constructor(userRepo: UserRepository){
+    constructor(userRepo: UserRepository, membershipService: MembershipService){
         this.userRepo = userRepo
+        this.membershipService = membershipService
     }
 
      async getUserByEmail(email: string): Promise<User> {
@@ -52,6 +55,7 @@ export class UserService implements IUserService {
         try {
             const hashedPassword = await this.hashPassword(createUserInput.password)
             const user = await this.userRepo.createUser({...createUserInput, password: hashedPassword})
+            await this.membershipService.createMembership(user.id)
             return user
         } catch (error) {
             throw error
