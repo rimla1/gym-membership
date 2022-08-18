@@ -1,4 +1,4 @@
-import mongoose, {Schema, model, Mongoose} from 'mongoose'
+import mongoose, {Schema, model} from 'mongoose'
 
 export interface IUser {
     name: string;
@@ -9,6 +9,8 @@ export interface IUser {
     _id: mongoose.ObjectId
   }
 
+
+  
 const userSchema = new Schema<IUser>({
     name: {
         type: String,
