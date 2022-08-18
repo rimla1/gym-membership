@@ -93,9 +93,6 @@ export class UserService implements IUserService {
         } catch (error) {
             throw error
         }
-        // $2b$10$cmpiQceepFTGlVrVaJOjw.5G4t4ICW/B5vSXPjaz1gimDqaNOVg9i // Current password [almir1234]
-        // $2b$10$tWXEbPSS0Xd.A8jVXnpMz.3N44LXGViSKL3f37Csonz8xVpLcdnpa // Updated different password from current password [rimla5]
-        // Password is the same (message from postman) // try with same password [rimla5]
     }
 
     private async hashPassword(passwordToHash: string){

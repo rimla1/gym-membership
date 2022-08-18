@@ -52,3 +52,13 @@ export class UnexpectedError extends Error {
     }
 }
 
+export class NotAuthenticated extends Error{
+    statusCode: number;
+    errors: string;
+    constructor(errors: string){
+        super()
+        this.errors = errors;
+        this.statusCode = 401;
+    }
+}
+
