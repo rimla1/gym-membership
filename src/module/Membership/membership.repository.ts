@@ -13,18 +13,14 @@ export class MembershipRepository {
         if(!expiredMemberships){
             throw new NotFoundError("Memberships Not Found")
         }
-        
         const membershipResult: MembershipResult[] = [];
-
         expiredMemberships.forEach(membership => {
             const mappedMembership = this.mapDBMembershipToAppMembership(membership)
             membershipResult.push(mappedMembership)
         })
-
         return membershipResult
         } catch (error) {
-            console.log(error)
-            throw new UnexpectedError("Something went wrong with promenicu ovo posle")
+            throw error
         }
     }
 
@@ -47,35 +43,35 @@ export class MembershipRepository {
 
         return membershipResult
         } catch (error) {
-            throw new UnexpectedError("Something went wrong with promenicu ovo posle")
+            throw error
         }
     }
 
     // Rename to FINDMEMBERSHIP
     async findMembership(userId: string): Promise<MembershipResult>{
         try {
-        console.log(" **3** Repository(Before going to database): No access to MembershipStatus")
         const DBmembership = await membershipModel.findOne({userId: userId}).populate({path: 'userId', select: '_id, name'})
         if(!DBmembership){
             throw new NotFoundError("Membership Not Found")
         }
         const appMembership = this.mapDBMembershipToAppMembership(DBmembership)
-        console.log(" **4** Repository(After coming from database): Have access to MembershipStatus")
-        // const appMembership = this.mapDBMembershipToAppMembership(membershipToUpdate)
         return appMembership
         } catch (error) {
-            throw new UnexpectedError("Something went wrong with promenicu ovo posle")
+            throw error
         }
     }
 
-    // Rename to UPDATEMEMBERSHIP
     async findAndUpdateMembership(userId: string, startsAt: Date, endsAt: Date): Promise<MembershipResult>{
-        const updatedMembership = await membershipModel.findOneAndUpdate({userId: userId}, {startsAt: startsAt, endsAt: endsAt}, {new: true})
-        if(!updatedMembership){
-            throw new NotFoundError("Membership Not Found")
+        try {
+            const updatedMembership = await membershipModel.findOneAndUpdate({userId: userId}, {startsAt: startsAt, endsAt: endsAt}, {new: true})
+            if(!updatedMembership){
+                throw new NotFoundError("Membership Not Found")
+            }
+            const appMembership = this.mapDBMembershipToAppMembership(updatedMembership)
+            return appMembership
+        } catch (error) {
+            throw error
         }
-        const appMembership = this.mapDBMembershipToAppMembership(updatedMembership)
-        return appMembership
     }
 
     async createMembership(userId: string){
@@ -84,7 +80,7 @@ export class MembershipRepository {
             const savedMembership = await membershipToSave.save()
             return savedMembership
         } catch (error) {
-            console.log(error)
+            throw error
         }
     }
 

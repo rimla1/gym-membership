@@ -1,5 +1,5 @@
 import {Router} from 'express'
-import { getUsersWithExpiredMembership, getUsersWithExpiredMembershipInPastWeek, updateMembership } from './membership.controller';
+import { getUsersWithExpiredMembership, getUsersWithExpiredMembershipInPastWeek, extendMembership } from './membership.controller';
 
 
 export const membershipRouter = Router();
@@ -12,4 +12,4 @@ membershipRouter.get("/", getUsersWithExpiredMembership)
 membershipRouter.get("/users", getUsersWithExpiredMembershipInPastWeek)
 
 // PUT update a membership for a certain user
-membershipRouter.put("/:userId", updateMembership)
+membershipRouter.put("/:userId", extendMembership)

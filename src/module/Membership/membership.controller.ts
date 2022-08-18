@@ -24,10 +24,10 @@ export const getUsersWithExpiredMembershipInPastWeek = async (req: Request, res:
     }
 }
 
-export const updateMembership = async (req: Request, res: Response, next: NextFunction) => {
+export const extendMembership = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const {userId} = req.params
-        const membershipStatus = await membershipService.updateMembership(userId)
+        const membershipStatus = await membershipService.extendMembership(userId)
         return res.json(membershipStatus)
     } catch (error) {
         return next(error)
