@@ -2,31 +2,31 @@ import { Request, Response ,NextFunction } from "express";
 import {config} from 'dotenv'
 config()
 import jwt from "jsonwebtoken"
+import { NotAuthenticated, NotFoundError } from "./errors";
 
-
-console.log("zastooooo")
 
 export = (req: Request, res: Response, next: NextFunction) => {
+    
     let secretToken: string
     if(process.env.ACCESS_TOKEN_SECRET){
     secretToken = process.env.ACCESS_TOKEN_SECRET
     }    else {
     throw new Error("Something went wrong!")
 }
+
     const token = req.get("Authorization")?.split(" ")[1]
-    // const token = "eyJhbGciOiJIUzI1NiJ9.NjJkZDJlNGU5ZTQzYzQyMTMxMDkzNzA5.1kTRpK5ziU8Kpb75hDzzTydyrDjRZyNyuszEGSJLRaQ"
-    console.log("Ovo je token : ", token)
+    if(!token){
+        throw new NotFoundError("No Token provided!")
+    }
+
     let verifiedToken;
     try {
-        console.log("Pre verifikacije")
         verifiedToken = jwt.verify(token as string, secretToken)
-        console.log("Verifikovao je token")
     } catch (error) {
-        throw error
+        throw new NotAuthenticated("Not Authenticated!")
     }
-    if(!verifiedToken){
-        console.log("Ovo nije taj pravi token ipak iako je verifikovan kao validan")
-        throw new Error("Not Authenticated!")
-    }
+
     next()
 }
+
+// [Valid token]: eyJhbGciOiJIUzI1NiJ9.NjJmZTI5ZTEzZjg0ZmE4NDJkMzFmNzA4.HDw5O5_y9UhwAJDqOQmLK_TRceJq5zbCQcq0spdx-28
