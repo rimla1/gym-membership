@@ -10,7 +10,8 @@ import { AlreadyExistsError, DoesNotExistsError, NotAuthenticated, NotFoundError
 
 const PORT = 3000;
 
-const MONGODB_URI = `mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@cluster0.ekxmb.mongodb.net/${process.env.MONGODB_DATABASE_NAME}?retryWrites=true&w=majority`;
+// const MONGODB_URI = `mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@cluster0.ekxmb.mongodb.net/${process.env.MONGODB_DATABASE_NAME}?retryWrites=true&w=majority`;
+const MONGODB_URI = "mongodb://localhost:27017/"
 
 const app = express();
 
