@@ -15,20 +15,24 @@ const seedDB = async () => {
         console.log("Connected correctly to database");
 
         const usersCollection = client.db("test").collection("users");
-        usersCollection.drop()
-        // let users: any = []
-        // for (let i = 0; i < 1000; i++) {
-        //     const user = {
-        //         name: faker.name.firstName(),
-        //         email: faker.internet.email(),
-        //         password: faker.internet.password(),
-        //         age: faker.random.numeric(2),
-        //         gender: faker.name.gender(true)
-        //     }
-        //     users.push(user)
-        // }
-        // usersCollection.insertMany(users)
+        // usersCollection.drop() Drop Users collection
+        let users: any = []
+        for (let i = 0; i < 1000; i++) {
+            const user = {
+                name: faker.name.firstName(),
+                email: faker.internet.email(),
+                password: faker.internet.password(),
+                age: faker.random.numeric(2),
+                gender: faker.name.gender(true)
+            }
+            users.push(user)
+        }
+        usersCollection.insertMany(users)
         // console.log(users)
+
+        const usersFromDB = await client.db("test").collection("users").find()
+        console.log(usersFromDB)
+
     } catch (error) {
         console.log(error)
     }
