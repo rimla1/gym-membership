@@ -55,7 +55,7 @@ const seedDB = async () => {
         }
 
 
-        await usersCollection.insertMany(users)
+        // await usersCollection.insertMany(users)
 
         const usersFromDB = await client.db("test").collection("users").find().toArray()
         // console.log(usersFromDB)
@@ -63,26 +63,29 @@ const seedDB = async () => {
 
         let memberships: any = []
         usersFromDB.forEach(user => {
-            for(let i =0; i < 1; i++){
                 const membership = {
                 startsAt: faker.date.between("2010-10-11", "2022-05-20"),
                 endsAt: faker.date.between("2010-06-20", "2025-08-20"),
                 userId: user._id
                 }
                 memberships.push(membership)
-            }
         });
 
 
 
 
-        await membershipsCollection.insertMany(memberships)
+        // await membershipsCollection.insertMany(memberships)
 
 
         // TODO 4 - Queries
         const userFromDB = await client.db("test").collection("users").findOne()
         // console.log(userFromDB) // - Ovo vraca jednog user-a iz baze (verovatno sa id-om 1)
 
+        const limitUsers = await client.db("test").collection("users").find().limit(5).toArray()
+        // console.log("Get first 5 users from database", limitUsers)
+
+        const sortUsersByAlphabeticOrder = await client.db("test").collection("users").find().sort({name: 1}).toArray()
+        // console.log("Sort users by alphabetic order", sortUsersByAlphabeticOrder)
 
     } catch (error) {
         console.log(error)
