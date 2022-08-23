@@ -54,13 +54,16 @@ const seedDB = async () => {
             users.push(user)
         }
 
+
+        await usersCollection.insertMany(users)
+
         const usersFromDB = await client.db("test").collection("users").find().toArray()
         // console.log(usersFromDB)
         console.log(usersFromDB.length)
 
         let memberships: any = []
         usersFromDB.forEach(user => {
-            for(let i =0; i < usersFromDB.length; i++){
+            for(let i =0; i < 1; i++){
                 const membership = {
                 startsAt: faker.date.between("2010-10-11", "2022-05-20"),
                 endsAt: faker.date.between("2010-06-20", "2025-08-20"),
@@ -71,12 +74,10 @@ const seedDB = async () => {
         });
 
 
-        // TODO 3 - Insert Into DB
-        // await usersCollection.insertMany(users)
-        // // console.log(users)
+
 
         await membershipsCollection.insertMany(memberships)
-        // // console.log(memberships)
+
 
         // TODO 4 - Queries
         const userFromDB = await client.db("test").collection("users").findOne()
