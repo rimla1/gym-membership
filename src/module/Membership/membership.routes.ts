@@ -13,4 +13,4 @@ membershipRouter.get("/", isAuth , getUsersWithExpiredMembership)
 membershipRouter.get("/users", isAuth, getUsersWithExpiredMembershipInPastWeek)
 
 // PUT update a membership for a certain user
-membershipRouter.put("/:userId", isAuth, extendMembership)
+membershipRouter.put("/:userId",  extendMembership)
