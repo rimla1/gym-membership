@@ -24,14 +24,27 @@ statisticsRouter.get("/numberOfFemaleUsers", async (req: Request, res: Response,
 statisticsRouter.get("/underageUsers", async (req: Request, res: Response, next: NextFunction) => {
     await client.connect();
     const underageUsers = await client.db("test").collection("users").countDocuments({age: {$lt:"18"}})
-    // const underageUsersDB = await client.db("test").collection("users").find({age: "18"}).toArray()
-    console.log(underageUsers)
     return res.json(underageUsers)
 })
 
-// Get number of users above 18
+// Get number of adults [18-65)[525]
+statisticsRouter.get("/adultsUsers", async (req: Request, res: Response, next: NextFunction) => {
+    await client.connect();
+    const adultsUsers = await client.db("test").collection("users").countDocuments({age: {$gte:"18", $lt:"65"}})
+    // db.myCollection.find({field1: {$gt:25, $lt:32}})
+    return res.json(adultsUsers)
+})
 
-// Get number of users who has more than 65
+// Get number of users who has more than 65 [376]
+statisticsRouter.get("/retiredUsers", async (req: Request, res: Response, next: NextFunction) => {
+    await client.connect();
+    const retiredUsers = await client.db("test").collection("users").countDocuments({age: {$gte:"65"}})
+    return res.json(retiredUsers)
+})
+
+// Number of users with active memberships
+
+// Number of users with inactive memberships
 
 // Get number of memberships for each month in a year
 
