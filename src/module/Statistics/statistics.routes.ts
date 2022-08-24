@@ -6,7 +6,8 @@ export const statisticsRouter =  Router()
 const uri = "mongodb://localhost:27017/";
 const client = new MongoClient(uri);
 
-
+const currentDate = new Date()
+console.log(currentDate)
 
 // Get number of Male Users [506]
 statisticsRouter.get("/numberOfMaleUsers", async (req: Request, res: Response, next: NextFunction) => {
@@ -42,9 +43,19 @@ statisticsRouter.get("/retiredUsers", async (req: Request, res: Response, next: 
     return res.json(retiredUsers)
 })
 
-// Number of users with active memberships
+// Number of users with active memberships [212]
+statisticsRouter.get("/usersWithActiveMembership", async (req: Request, res: Response, next: NextFunction) => {
+    await client.connect();
+    const usersWithActiveMembership = await client.db("test").collection("memberships").countDocuments({endsAt: {$gte:currentDate}})
+    return res.json(usersWithActiveMembership)
+})
 
-// Number of users with inactive memberships
+// Number of users with inactive memberships [788]
+statisticsRouter.get("/usersWithExpiredMembership", async (req: Request, res: Response, next: NextFunction) => {
+    await client.connect();
+    const usersWithExpiredMembership = await client.db("test").collection("memberships").countDocuments({endsAt: {$lt:currentDate}})
+    return res.json(usersWithExpiredMembership)
+})
 
 // Get number of memberships for each month in a year
 
