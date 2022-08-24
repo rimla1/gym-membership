@@ -87,6 +87,8 @@ const seedDB = async () => {
         const sortUsersByAlphabeticOrder = await client.db("test").collection("users").find().sort({name: 1}).toArray()
         // console.log("Sort users by alphabetic order", sortUsersByAlphabeticOrder)
 
+        const sortAndLimitUsersByAlphabeticOrder = await client.db("test").collection("users").find().sort({name: 1}).limit(5).toArray()
+        // console.log("Sort and Limit users by alphabetic order", sortAndLimitUsersByAlphabeticOrder)
     } catch (error) {
         console.log(error)
     }

@@ -6,6 +6,7 @@ import mongoose from 'mongoose';
 import { userRouter } from './module/User/user.routes';
 import { authRouter } from './module/Auth/auth.routes';
 import { membershipRouter } from './module/Membership/membership.routes';
+import { statisticsRouter } from './module/Statistics/statistics.routes';
 import { AlreadyExistsError, DoesNotExistsError, NotAuthenticated, NotFoundError, ValidationError } from './shared/errors';
 
 const PORT = 3000;
@@ -20,6 +21,7 @@ app.use(express.json())
 app.use("/api/v1/users", userRouter)
 app.use("/api/v1/logins", authRouter)
 app.use("/api/v1/membership", membershipRouter)
+app.use("/api/v1/statistics", statisticsRouter)
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
     if(err instanceof AlreadyExistsError || err instanceof ValidationError || err instanceof DoesNotExistsError || err instanceof NotFoundError || err instanceof NotAuthenticated) {
