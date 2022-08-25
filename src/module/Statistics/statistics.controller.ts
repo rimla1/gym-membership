@@ -68,3 +68,10 @@ export const createUser = async (req: Request, res: Response, next: NextFunction
     console.log(user)
     return res.json(user)
 }
+
+export const findUserByEmail = async (req: Request, res: Response, next: NextFunction) => {
+    await client.connect();
+    const user = await client.db("test").collection("users").find({email: "almir@gmail.com"}).toArray()
+    console.log(user)
+    return res.json(user)
+}

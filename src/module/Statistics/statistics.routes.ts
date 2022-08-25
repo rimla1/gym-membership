@@ -1,6 +1,6 @@
 import { Response, Request, NextFunction, Router } from "express"
 import { MongoClient } from "mongodb"
-import { adultsUsers, numberOfFemaleUsers, numberOfMaleUsers, retiredUsers, underageUsers, usersWithActiveMembership, usersWithExpiredMembership, getFiveUsersWithExpiredMemberships, createUser } from "./statistics.controller";
+import { adultsUsers, numberOfFemaleUsers, numberOfMaleUsers, retiredUsers, underageUsers, usersWithActiveMembership, usersWithExpiredMembership, getFiveUsersWithExpiredMemberships, createUser, findUserByEmail } from "./statistics.controller";
 
 export const statisticsRouter =  Router()
 
@@ -34,5 +34,8 @@ statisticsRouter.get("/getFiveUsersWithExpiredMemberships", getFiveUsersWithExpi
 
 // Create one user
 statisticsRouter.post("/createUser", createUser)
+
+// Find user by email
+statisticsRouter.get("/findUserByEmail", findUserByEmail)
 
 // Get number of memberships for each month in a year
