@@ -43,6 +43,28 @@ export const usersWithActiveMembership = async (req: Request, res: Response, nex
     return res.json(usersWithActiveMembership)
 }
 
-export const x = async (req: Request, res: Response, next: NextFunction) => {
+export const usersWithExpiredMembership = async (req: Request, res: Response, next: NextFunction) => {
+    await client.connect();
+    const usersWithExpiredMembership = await client.db("test").collection("memberships").countDocuments({endsAt: {$lt:currentDate}})
+    return res.json(usersWithExpiredMembership)
+}
 
+export const getFiveUsersWithExpiredMemberships = async (req: Request, res: Response, next: NextFunction) => {
+    await client.connect();
+    const usersWithExpiredMembership = await client.db("test").collection("memberships").find({endsAt: {$lt:currentDate}}).limit(5).toArray()
+    console.log(usersWithExpiredMembership)
+    return res.json(usersWithExpiredMembership)
+}
+
+export const createUser = async (req: Request, res: Response, next: NextFunction) => {
+    await client.connect();
+    const user = await client.db("test").collection("users").insertOne({
+        email: "almir@gmail.com",
+        password: "almir2002",
+        name: "Almir",
+        age: 18,
+        gender: "Male"
+    })
+    console.log(user)
+    return res.json(user)
 }

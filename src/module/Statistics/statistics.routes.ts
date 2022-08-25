@@ -1,6 +1,6 @@
 import { Response, Request, NextFunction, Router } from "express"
 import { MongoClient } from "mongodb"
-import { adultsUsers, numberOfFemaleUsers, numberOfMaleUsers, retiredUsers, underageUsers, usersWithActiveMembership } from "./statistics.controller";
+import { adultsUsers, numberOfFemaleUsers, numberOfMaleUsers, retiredUsers, underageUsers, usersWithActiveMembership, usersWithExpiredMembership, getFiveUsersWithExpiredMemberships, createUser } from "./statistics.controller";
 
 export const statisticsRouter =  Router()
 
@@ -23,15 +23,16 @@ statisticsRouter.get("/adultsUsers", adultsUsers)
 // Get number of users who has more than 65 [376]
 statisticsRouter.get("/retiredUsers", retiredUsers)
 
-// Number of users with active memberships [212]
+// Get Number of users with active memberships [212]
 statisticsRouter.get("/usersWithActiveMembership", usersWithActiveMembership)
 
-// Number of users with inactive memberships [788]
-statisticsRouter.get("/usersWithExpiredMembership", async (req: Request, res: Response, next: NextFunction) => {
-    await client.connect();
-    const usersWithExpiredMembership = await client.db("test").collection("memberships").countDocuments({endsAt: {$lt:currentDate}})
-    return res.json(usersWithExpiredMembership)
-})
+// Get Number of users with inactive memberships [788]
+statisticsRouter.get("/usersWithExpiredMembership", usersWithExpiredMembership)
+
+// Get 5 users with expired memberships
+statisticsRouter.get("/getFiveUsersWithExpiredMemberships", getFiveUsersWithExpiredMemberships)
+
+// Create one user
+statisticsRouter.post("/createUser", createUser)
 
 // Get number of memberships for each month in a year
-
